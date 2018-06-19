@@ -1,0 +1,13 @@
+
+.gameTable {
+  overflow: scroll;
+  max-height: 200px;
+  hover: pointer;
+}
+
+.center {
+  margin: auto;
+}
+
+
+

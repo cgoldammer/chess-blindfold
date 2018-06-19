@@ -1,0 +1,7 @@
+node_modules/
+data/data_private.json
+data/template.json
+*.sw*
+lib/bundle.js
+.travis*
+package-lock.json
