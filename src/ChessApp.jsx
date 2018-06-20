@@ -32,17 +32,17 @@ export class ChessApp extends React.Component {
   constructor(props){
     super(props);
     this.state = { startMove: 0, showBoard: false };
-    this.moves = defaultGetRows(props.pgn);
   }
-  setToEnd = () => this.setMove(this.moves.length);
+	getMoves = () => defaultGetRows(this.props.pgn);
+  setToEnd = () => this.setMove(this.getMoves().length);
   toggleShow = () => { this.setState({showBoard: !this.state.showBoard}) }
   setMove = move => this.setState({startMove: move});
   rowMapper = (row, index) => ({moveNumber: row[0], white: row[1], black: row[2]});
-  getData = () => this.moves.map(this.rowMapper);
+  getData = () => this.getMoves().map(this.rowMapper);
   changeMove = (num) => () => {
     const transformer = (prevState, props) => {
       const next = prevState.startMove + num
-      if (next >= 0 && next <= this.moves.length){
+      if (next >= 0 && next <= this.getMoves().length){
         return {startMove: next}
       }
     }
@@ -65,8 +65,11 @@ export class ChessApp extends React.Component {
   }
   
   render = () => {
-    const data = this.getData();
-    console.log(this.props.fen);
+		const maxLength = 20;
+    var data = this.getData();
+		if (data.length >= maxLength){
+			data = data.slice(data.length - maxLength)
+		}
     const diagram = this.state.showBoard ? <Chessdiagram key={this.state.startMove} flip={flip} fen={ this.props.fen } squareSize={squareSize} lightSquareColor={lightSquareColor} darkSquareColor={darkSquareColor}/> : null
 
     return (

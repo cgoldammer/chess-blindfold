@@ -32,13 +32,51 @@ test('the app stores the moves', () => {
   expect(wrapper.state()['moves']).toEqual(List([move]));
 });
 
-test('after I make a move, the active color changes', () => {
-  const wrapper = mount(<App autoMove={ false }/>);
-  expect(wrapper.state()['colorToMoveWhite']).toEqual(true);
-  const move = 'e4';
-  wrapper.instance().makeMove(move);
-  wrapper.update();
-  expect(wrapper.state()['colorToMoveWhite']).toEqual(false);
+describe('In the UI', () => {
+	test('if I click "reset", the moves reset to empty', () => {
+		const wrapper = mount(<App autoMove={ false }/>);
+		const move = 'e4';
+		wrapper.instance().makeMove(move);
+		expect(wrapper.state()['moves']).toEqual(List([move]));
+		// The #resetButton returns two elements - this seems like a bug?
+		wrapper.find('#resetButton').first().simulate('click');
+		wrapper.update()
+		expect(wrapper.state()['moves']).toEqual(List([]));
+	})
+	test('if I leave the text field empty and click "submit", the moves stay empty', () => {
+		const wrapper = mount(<App autoMove={ false }/>);
+		// The #resetButton returns two elements - this seems like a bug?
+		wrapper.find('#submitButton').first().simulate('click');
+		wrapper.update()
+		expect(wrapper.state()['moves']).toEqual(List([]));
+	})
+	test('if I enter a valid move and click "submit", the move is added', () => {
+		const wrapper = mount(<App autoMove={ false }/>);
+		const moveEntry = wrapper.find(MoveEntry);
+		moveEntry.instance().setValue("e4");
+		wrapper.find('#submitButton').first().simulate('click');
+		wrapper.update()
+		expect(wrapper.state()['moves']).toEqual(List(['e4']));
+	})
+});
+
+describe('after I make a move', () => {
+	test('without automove, the active color changes', () => {
+		const wrapper = mount(<App autoMove={ false }/>);
+		expect(wrapper.state()['colorToMoveWhite']).toEqual(true);
+		const move = 'e4';
+		wrapper.instance().makeMove(move);
+		wrapper.update();
+		expect(wrapper.state()['colorToMoveWhite']).toEqual(false);
+	});
+	test('with automove, the active color changes', () => {
+		const wrapper = mount(<App autoMove={ true }/>);
+		expect(wrapper.state()['colorToMoveWhite']).toEqual(true);
+		const move = 'e4';
+		wrapper.instance().makeMove(move);
+		wrapper.update();
+		expect(wrapper.state()['colorToMoveWhite']).toEqual(true);
+	});
 });
 
 const getPositionClient = () => {

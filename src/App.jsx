@@ -7,7 +7,8 @@ import { AppNavbar } from './AppNavbar.jsx';
 import { List } from 'immutable';
 import { ChessApp } from './ChessApp.jsx';
 
-import { getBest, newClient, isMoveValid } from './helpers.jsx'
+import { newClient, isMoveValid } from './helpers.jsx'
+import { getBest } from './engine.js'
 
 export class MoveEntry extends React.Component {
   constructor(props){
@@ -23,7 +24,8 @@ export class MoveEntry extends React.Component {
   componentDidMount() {
 		this.focus();
 	}
-	onChange = e => this.setState({ value: e.target.value });
+	setValue = value => this.setState({value: value})
+	onChange = e => this.setValue(e.target.value)
 		handleKeyPress = target => {
 			if (target.charCode == 13){
 				this.submit();
@@ -45,7 +47,7 @@ export class MoveEntry extends React.Component {
 		this.focus()
 	}
   moveInvalid = () => {
-    alert('invalid')
+    
   }
   render = () => {
     return (
@@ -59,7 +61,7 @@ export class MoveEntry extends React.Component {
 						onKeyPress={this.handleKeyPress}
 						value={ this.state.value }
 					/>
-					<Button onClick={ this.submit }>Submit</Button>
+					<Button id="submitButton" onClick={ this.submit }>Submit</Button>
 				</Col>
       </div>
     )
@@ -86,7 +88,6 @@ export class App extends React.Component {
 	reset = () => this.setState(startingState())
   makeMove = move => {
     const newMoves = this.state.moves.push(move);
-    console.log("Making move: " + move);
     this.state.gameClient.move(move, {sloppy: true});
     // If automoving is enabled, my move leads to a move by the computer.
     const nextMoveCallback = this.props.autoMove ? this.makeComputerMove : () => {}
@@ -95,7 +96,6 @@ export class App extends React.Component {
   }
   makeComputerMove = () => {
     // Only make a computer move if it's not the player's turn
-    console.log("computer move");
     if (this.state.ownColorWhite == this.state.colorToMoveWhite){
       return 
     }
@@ -114,9 +114,9 @@ export class App extends React.Component {
             Moves
           </Row>
           <Row>
-            <ChessApp key={this.state.gameClient.pgn()} fen={ this.state.gameClient.fen() } pgn={ this.state.gameClient.pgn() }/>
+            <ChessApp fen={ this.state.gameClient.fen() } pgn={ this.state.gameClient.pgn() }/>
           </Row>
-					<Button onClick={ this.reset }>Reset</Button>
+					<Button id="resetButton" onClick={ this.reset }>Reset</Button>
         </Grid>
       </div>
 		)
