@@ -4,7 +4,6 @@ import styles from './App.css';
 import { ButtonGroup, Panel, ListGroup, ListGroupItem, Navbar, Nav, NavItem, NavDropdown, Button, DropdownButton, MenuItem, FormControl, Breadcrumb, Modal, Grid, Row, Col } from 'react-bootstrap';
 
 import { AppNavbar } from './AppNavbar.jsx';
-import { Board } from './Board.jsx';
 import { List } from 'immutable';
 import { ChessApp } from './ChessApp.jsx';
 
@@ -42,11 +41,13 @@ export class MoveEntry extends React.Component {
       this.moveInvalid();
     }
   }
+	componentDidUpdate = (prevProps, prevState, snapshot) => {
+		this.focus()
+	}
   moveInvalid = () => {
     alert('invalid')
   }
   render = () => {
-		this.focus();
     return (
       <div>
 				<Col sm={4} smOffset={4}>
