@@ -27,13 +27,15 @@ sf.onmessage = function(event) {
 Get the best move in a given position, and call the `callback` with the
 move when it's found 
 */
-export const getBest = (fen, callback) => {
+export const getBest = (level, fen, callback) => {
   sf.postMessage('position fen ' + fen);
-  sf.postMessage('setoption name Skill Level value 0')
+  sf.postMessage('setoption name Skill Level value ' + level)
   sf.postMessage('go depth 2');
   sf.onmessage = event => {
     if (event.data.startsWith('bestmove')){
       const move = event.data.split(" ")[1];
+      console.log("betting move");
+      console.log(move);
       return callback(move);
     }
   }

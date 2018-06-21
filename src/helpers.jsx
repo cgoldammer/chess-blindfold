@@ -10,14 +10,39 @@ import { getBest } from './engine.js';
 
 
 // Using either `Chess` or `Chess2` - see the reason for this hack above
-export const newClient = () => (Chess ? new Chess() : new Chess2())
-
-export const isMoveValid = (gameClient, move) => {
-  const allMoves = List(gameClient.moves())
-  return allMoves.contains(move);
-}
+export const newClient = (fen=startingFen) => (Chess ? new Chess(fen) : new Chess2(fen))
 
 export const startingFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+
+const gameStatus = {
+	starting: [0, "New Game"]
+, active: [1, "Active Game"]
+, whiteWon: [2, "White won"]
+, blackWon: [3, "Black won"]
+, draw: [4, "Draw"]
+}
+
+export class GameClient {
+	constructor(fen=startingFen){
+		this.client = newClient(fen);
+	}
+	temp = () => true;
+	isMoveValid = move => {
+		// To test whether a move is valid, we need to create a new client
+		// to ensure we are not changing the existing client's state
+		const client = newClient(this.client.fen())
+		const result = client.move(move, {sloppy: true});
+		return result != null
+	}
+	move = mv => this.client.move(mv, {sloppy: true})
+	getStatus = () => {
+		const client = this.client;
+		if (client.history().length == 0) return gameStatus.starting
+		if (client.in_checkmate()) return client.turn() == 'b' ? gameStatus.whiteWon : gameStatus.blackWon
+		if (client.in_stalemate()) return gameStatus.draw
+		return gameStatus.active
+	}
+}
 
 export const defaultGetRows = (movetext, newlineChar) => { // eslint-diable-line no-unused-vars
   newlineChar;

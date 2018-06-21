@@ -1,8 +1,7 @@
 
 .gameTable {
   overflow: scroll;
-  max-height: 200px;
-  hover: pointer;
+  max-height: 400px;
 }
 
 .center {
