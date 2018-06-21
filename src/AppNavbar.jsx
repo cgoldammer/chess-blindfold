@@ -9,7 +9,7 @@ export class AppNavbar extends React.Component {
   }
   render = () => {
     return (
-      <Navbar inverse collapseOnSelect>
+      <Navbar collapseOnSelect style={{ borderRadius: 0 }}>
         <Navbar.Header>
           <Navbar.Brand>
             {appName}

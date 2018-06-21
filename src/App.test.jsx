@@ -17,7 +17,50 @@ import { shallow, mount, render } from 'enzyme';
 
 import { dummy } from './Context.js';
 
-import { startingFen, isMoveValid } from './helpers.jsx'
+import { startingFen } from './helpers.jsx'
+
+import { GameClient } from './helpers.jsx';
+
+const getPositionClient = () => {
+  const client = new GameClient();
+  client.move('e4');
+  client.move('f5');
+  return client
+}
+
+describe('In the game client', () => {
+	test('Checking for a valid move does not change the state', () => {
+		const client = new GameClient()
+		const move = 'e4';
+		expect(client.isMoveValid('e4')).toEqual(true)
+		expect(client.client.fen()).toEqual(startingFen)
+	})
+	test('Sloppy notation works', () => {
+		const client = new GameClient()
+		expect(client.isMoveValid('e4')).toEqual(true)
+		expect(client.isMoveValid('e2e4')).toEqual(true)
+	})
+	test('but invalid moves are still invalid', () => {
+		const client = new GameClient()
+		expect(client.isMoveValid('e5')).toEqual(false)
+		expect(client.isMoveValid('e2e5')).toEqual(false)
+	})
+	test('taking moves require "x"', () => {
+		const client = getPositionClient();
+		expect(client.isMoveValid('exf5')).toEqual(true);
+		expect(client.isMoveValid('ef5')).toEqual(false);
+	});
+	test('Checks work with and without "+"', () => {
+		const client = getPositionClient();
+		expect(client.isMoveValid('Qh5+')).toEqual(true);
+		expect(client.isMoveValid('Qh5')).toEqual(true);
+	});
+	test('I can enter moves in the format stockfish uses', () => {
+		const client = new GameClient();
+		client.move('g1f3', {sloppy: true});
+		expect(client.isMoveValid('Nf6')).toEqual(true);
+	});
+});
 
 test('the app contains a move entry', () => {
   const wrapper = mount(<App autoMove={ false } />);
@@ -37,6 +80,7 @@ describe('In the UI', () => {
 		const wrapper = mount(<App autoMove={ false }/>);
 		const move = 'e4';
 		wrapper.instance().makeMove(move);
+		wrapper.update()
 		expect(wrapper.state()['moves']).toEqual(List([move]));
 		// The #resetButton returns two elements - this seems like a bug?
 		wrapper.find('#resetButton').first().simulate('click');
@@ -44,14 +88,14 @@ describe('In the UI', () => {
 		expect(wrapper.state()['moves']).toEqual(List([]));
 	})
 	test('if I leave the text field empty and click "submit", the moves stay empty', () => {
-		const wrapper = mount(<App autoMove={ false }/>);
+		const wrapper = mount(<App autoMove={ false } showInput={ true }/>);
 		// The #resetButton returns two elements - this seems like a bug?
 		wrapper.find('#submitButton').first().simulate('click');
 		wrapper.update()
 		expect(wrapper.state()['moves']).toEqual(List([]));
 	})
 	test('if I enter a valid move and click "submit", the move is added', () => {
-		const wrapper = mount(<App autoMove={ false }/>);
+		const wrapper = mount(<App autoMove={ false } showInput={ true }/>);
 		const moveEntry = wrapper.find(MoveEntry);
 		moveEntry.instance().setValue("e4");
 		wrapper.find('#submitButton').first().simulate('click');
@@ -79,48 +123,17 @@ describe('after I make a move', () => {
 	});
 });
 
-const getPositionClient = () => {
-  const gc = newClient();
-  gc.move('e4');
-  gc.move('f5');
-  return gc
-}
-
-describe('If I enter moves, then', () => {
-	test('an invalid move is invalid', () => {
-		expect(isMoveValid(newClient(), 'e5')).toEqual(false);
-	});
-	test('a valid move is valid', () => {
-		expect(isMoveValid(newClient(), 'e4')).toEqual(true);
-	});
-	test('taking move requires x to be valid', () => {
-		const gc = getPositionClient();
-		expect(isMoveValid(gc, 'exf5')).toEqual(true);
-		expect(isMoveValid(gc, 'ef5')).toEqual(false);
-	});
-	test('Checks require including a "+"', () => {
-		const gc = getPositionClient();
-		expect(isMoveValid(gc, 'Qh5+')).toEqual(true);
-		expect(isMoveValid(gc, 'Qh5')).toEqual(false);
-	});
-	test('I can enter moves in the format stockfish uses', () => {
-		const gc = newClient();
-		gc.move('g1f3', {sloppy: true});
-		expect(isMoveValid(gc, 'Nf6')).toEqual(true);
-	});
-});
-
 describe('Testing the dummy engine', () => {
 	test('get best returns a move in the starting position', () => {
 		const mockCallback = jest.fn();
-		getBest(startingFen, mockCallback);
+		getBest(0, startingFen, mockCallback);
 		expect(mockCallback.mock.calls[0][0]).toBeTruthy
 	});
 
 	test('get best returns no move if mated', () => {
 		const mockCallback = jest.fn();
 		const matedFen = 'rrk5/8/K7/8/8/8/8/8 w - -'
-		getBest(matedFen, mockCallback);
+		getBest(0, matedFen, mockCallback);
 		expect(mockCallback.mock.calls[0][0]).not.toBeTruthy
 	});
 });

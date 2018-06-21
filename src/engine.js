@@ -29,6 +29,7 @@ move when it's found
 */
 export const getBest = (level, fen, callback) => {
   sf.postMessage('position fen ' + fen);
+  console.log("level: " + level);
   sf.postMessage('setoption name Skill Level value ' + level)
   sf.postMessage('go depth 2');
   sf.onmessage = event => {
