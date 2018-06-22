@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styles from './App.css';
-import { Form, FormGroup, ControlLabel, ToggleButtonGroup, ToggleButton, ButtonGroup, Panel, ListGroup, ListGroupItem, Navbar, Nav, NavItem, NavDropdown, Button, DropdownButton, MenuItem, FormControl, Breadcrumb, Modal, Grid, Row, Col } from 'react-bootstrap';
+import { Label, Form, FormGroup, ControlLabel, ToggleButtonGroup, ToggleButton, ButtonGroup, Panel, ListGroup, ListGroupItem, Navbar, Nav, NavItem, NavDropdown, Button, DropdownButton, MenuItem, FormControl, Breadcrumb, Modal, Grid, Row, Col } from 'react-bootstrap';
 import Select from 'react-select'
 
 import { AppNavbar } from './AppNavbar.jsx';
@@ -81,17 +81,23 @@ export class MoveEntry extends React.Component {
   }
 }
 
-const startingState = () => {
+
+const resetState = () => {
 	const gameClient = new GameClient();
 	return {
 		moves: List([])
-	, skillLevel: 0
 	, gameClient: gameClient
-	, ownColorWhite: true
 	, colorToMoveWhite: true
 	, showBoard: false
 	, showType: "make"
 	}
+}
+
+var startingState = () => {
+	var state = resetState()
+	state['ownColorWhite'] = true
+	state['skillLevel'] = 0
+	return state
 }
 
 export class SettingsWindow extends React.Component {
@@ -145,13 +151,13 @@ export class StatusWindow extends React.Component {
 		super(props);
 	}
 	render = () => {
-		const humanText = this.props.humanMove ? "You played: " + this.props.humanMove : "Make your move!"
-		const computerText = this.props.computerMove ? "Computer played: " + this.props.computerMove : "The computer is waiting..."
+		const humanText = this.props.humanMove ? (<div><span>You played </span><Label>{ this.props.humanMove }</Label></div>): <span>Make your move!</span>
+		const computerText = this.props.computerMove ? (<div><span>Computer played </span><Label>{ this.props.computerMove }</Label></div>): <span>Computer is waiting...</span>
 		const style = { height:"50px", fontSize: "200%", textAlign: "center", marginTop: 10}
 		return (
 			<div>
 				<Row style= { style }>
-					{ this.props.status }
+					<Label bsStyle={ this.props.status[2] }> { this.props.status[1] } </Label>
 				</Row>
 				<Row style= { style }>
 					{ humanText }
@@ -169,7 +175,7 @@ export class App extends React.Component {
 		super(props);
     this.state = startingState()
 	}
-	reset = () => this.setState(startingState())
+	reset = () => this.setState(resetState(), this.makeComputerMove)
 	componentDidUpdate = (prevProps, prevState, snapshot) => {
 		var table = document.getElementById("moveTable");
 		if (table != null && "scrollHeight" in table){
@@ -209,7 +215,7 @@ export class App extends React.Component {
 	getLastHumanMove = this.getLastMove(1, 2)
 	makeMoveElement = () => (
 		<div>
-			<StatusWindow status={ this.state.gameClient.getStatus()[1] } humanMove = { this.getLastHumanMove() } computerMove = { this.getLastComputerMove() }/>
+			<StatusWindow status={ this.state.gameClient.getStatus() } humanMove = { this.getLastHumanMove() } computerMove = { this.getLastComputerMove() }/>
 			<Row>
 				<MoveEntry showInput={ this.props.showInput } gameClient={ this.state.gameClient } makeMove={ this.makeMove } />
 			</Row>
@@ -231,7 +237,7 @@ export class App extends React.Component {
 	render = () => {
 		return (
       <div>
-        <AppNavbar/>
+				<AppNavbar/>
         <Grid>
 					<Row>
 						<Col sm={6} smOffset={3}>

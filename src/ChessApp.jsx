@@ -46,7 +46,7 @@ export class MoveTable extends React.Component {
   getData = () => this.getMoves().map(this.rowMapper);
 	render = () => {
     var data = this.getData();
-		if (data.length == 0) return null;
+		if (data.length == 0) return <div style={{textAlign: "center"}}>No moves yet</div>
 		return <div id="moveTable" className={styles.gameTable}> <ReactTable pageSize={data.length} showPagination={false} data={data} columns={moveColumns} getTdProps={this.onRowClick}/></div>
 	}
 }
