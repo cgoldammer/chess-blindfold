@@ -1,14 +1,22 @@
 # Blindfold chess
 
-This is an app to train you in playing blindfold. Think of it as stockfish without the board. You can enter moves in a textfield, and the app tells you what move the computer played.
+This is an app to train you in playing blindfold. Think of it as stockfish without the board. You see all possible moves and click on a move to make it.
+
+The app is optimized for mobile play and aims to be as simple as possible. You should just be able to click to play.
+
+# Features
+
+- Show the board if you can't fully remember the position
+- Change the stockfish difficulty
+- Provide different display options for possible moves. For instance, don't show whether a move is taking a piece, which makes the game harder.
 
 # Todo
 
 - Rewind moves by clicking on the list of moves
-- Change the difficulty
-- Ensure moves always fit on screen
-- Show board without pieces
-- Show only pawn structure
-- Allow entering moves through nice clickable interface (for mobile)
+- Show board with only pawn structure
 - Ask questions about position (e.g. what are the fields for the white pawns?)
+- Store results so you can find out whether you are improving
 
+# Help
+
+I'm always greateful for collaborators!
