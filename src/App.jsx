@@ -48,10 +48,27 @@ export class MoveEntry extends React.Component {
 		this.focus()
 	}
   moveInvalid = () => {
-    
   }
+	displayMove = move => {
+		var formattedMove = move;
+		if (!this.props.parentState.showIfMate) {
+			formattedMove = formattedMove.replace("#", "+");
+		}
+		if (!this.props.parentState.showIfTakes) {
+			formattedMove = formattedMove.replace("x", "");
+		}
+		if (!this.props.parentState.showIfCheck) {
+			formattedMove = formattedMove.replace("+", "");
+		}
+		return formattedMove
+	}
   render = () => {
 		const moves = this.props.gameClient.client.moves();
+		const buttonForMove = move => (
+			<Col key={ move } xs={3} md={2}>
+				<div className={styles.moveButton} onClick={ () => this.props.makeMove(move) }>{ this.displayMove(move) }</div>
+			</Col>
+		)
 		const input = !this.props.showInput ? null :
 				<div>
 					<Row style={{ marginLeft: 0, marginRight: 0 }}>
@@ -74,7 +91,7 @@ export class MoveEntry extends React.Component {
       <div>
 				{ input }
 				<Row style={{ marginLeft: 0, marginRight: 10 }}>
-					{ moves.map(move => <Col key={ move } xs={3} md={2} ><div className={styles.moveButton} onClick={ () => this.props.makeMove(move) }>{ move }</div></Col>) }
+					{ moves.map(buttonForMove) }
 				</Row>
       </div>
     )
@@ -97,6 +114,9 @@ var startingState = () => {
 	var state = resetState()
 	state['ownColorWhite'] = true
 	state['skillLevel'] = 0
+	state['showIfMate'] = false
+	state['showIfTakes'] = true
+	state['showIfCheck'] = true
 	return state
 }
 
@@ -113,7 +133,24 @@ export class SettingsWindow extends React.Component {
 			const elo = Math.floor((minElo + (maxElo - minElo) * (i / numLevels)) / 100) * 100;
 			values.push({value: i, label: elo})
 		}
-		
+		const buttonForProperty = (name, display) => {
+			return (
+				<Row>
+					<Col xs={6}>
+						<div>{ display }</div>
+					</Col>
+					<Col xs={6}>
+						<ToggleButtonGroup justified type="radio" name="options" value={ this.props.parentState[name] } onChange={value => this.props.setProperty(name, value)}>
+							<ToggleButton value={ true }>Yes</ToggleButton>
+							<ToggleButton value={ false }>No</ToggleButton>
+						</ToggleButtonGroup>
+					</Col>
+				</Row>
+			)
+		}
+
+		const hr = <hr style={{ height: "2px", border: "0 none", color: "lightGray", backgroundColor: "lightGray" }}/>
+
 		return (
 			<div>
 				<Row>
@@ -129,6 +166,7 @@ export class SettingsWindow extends React.Component {
 						/>
 					</Col>
 				</Row>
+				{ hr }
 				<Row>
 					<Col xs={6}>
 						<div> You play: </div>
@@ -140,7 +178,13 @@ export class SettingsWindow extends React.Component {
 						</ToggleButtonGroup>
 					</Col>
 				</Row>
-				<hr/>
+				{ hr }
+				{ buttonForProperty('showIfMate', 'Show if move is mate') }
+				{ hr }
+				{ buttonForProperty('showIfCheck', 'Show if move is check') }
+				{ hr }
+				{ buttonForProperty('showIfTakes', 'Show is move is taking piece') }
+				{ hr }
 			</div>
 		)
 	}
@@ -217,7 +261,12 @@ export class App extends React.Component {
 		<div>
 			<StatusWindow status={ this.state.gameClient.getStatus() } humanMove = { this.getLastHumanMove() } computerMove = { this.getLastComputerMove() }/>
 			<Row>
-				<MoveEntry showInput={ this.props.showInput } gameClient={ this.state.gameClient } makeMove={ this.makeMove } />
+				<MoveEntry 
+					showInput={ this.props.showInput } 
+					gameClient={ this.state.gameClient } 
+					makeMove={ this.makeMove }
+					parentState = { this.state }
+				/>
 			</Row>
 			<Row style= {{ marginTop: 20}}>
 				{ this.state.gameClient.getStatus() == gameStatus.starting ? null :
@@ -233,7 +282,19 @@ export class App extends React.Component {
 	moveTableElement = () => <MoveTable pgn={ this.state.gameClient.client.pgn() }/>
   setSkill = skill => this.setState({ skillLevel: skill.value })
 	setOwnColor = isWhite => this.setState({ ownColorWhite: isWhite }, this.makeComputerMove)
-	settingsElement = () => <SettingsWindow skillLevel={ this.state.skillLevel } setSkill={ this.setSkill } ownColorWhite={ this.state.ownColorWhite } setOwnColor= { this.setOwnColor }/>
+	setProperty = (name, value) => {
+		var newState = {}
+		newState[name] = value
+		this.setState(newState);
+	}
+	settingsElement = () => <SettingsWindow 
+		skillLevel={ this.state.skillLevel }
+		setSkill={ this.setSkill } 
+		ownColorWhite={ this.state.ownColorWhite } 
+		setOwnColor= { this.setOwnColor }
+		setProperty = { this.setProperty }
+		parentState = { this.state }
+	/>
 	render = () => {
 		return (
       <div>
