@@ -9,10 +9,10 @@ For test environment, mock out stockfish with a function that
 returns a random move.
 */
 try {
-	var sf = new Worker('./stockfish.js');
+  var sf = new Worker('./stockfish.js');
 }
 catch(err) {
-	var sf = ({})
+  var sf = ({})
 }
 
 /* 

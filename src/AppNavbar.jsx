@@ -9,15 +9,15 @@ export class AppNavbar extends React.Component {
   }
   render = () => {
     return (
-			<div style={{ marginBottom: 0 }}>
-				<Navbar collapseOnSelect style={{ marginBottom: 0, borderRadius: 0 }}>
-					<Navbar.Header>
-						<Navbar.Brand>
-							{appName}
-						</Navbar.Brand>
-					</Navbar.Header>
-				</Navbar>
-			</div>
+      <div style={{ marginBottom: 0 }}>
+        <Navbar collapseOnSelect style={{ marginBottom: 0, borderRadius: 0 }}>
+          <Navbar.Header>
+            <Navbar.Brand>
+              {appName}
+            </Navbar.Brand>
+          </Navbar.Header>
+        </Navbar>
+      </div>
     )
   }
 }

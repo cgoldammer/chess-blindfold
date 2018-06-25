@@ -15,7 +15,7 @@ export const newClient = (fen=startingFen) => (Chess ? new Chess(fen) : new Ches
 export const startingFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 
 export const gameStatus = {
-	starting: [0, "New Game", "info"]
+  starting: [0, "New Game", "info"]
 , active: [1, "Active Game", "primary"]
 , whiteWon: [2, "White won", "danger"]
 , blackWon: [3, "Black won", "danger"]
@@ -23,25 +23,25 @@ export const gameStatus = {
 }
 
 export class GameClient {
-	constructor(fen=startingFen){
-		this.client = newClient(fen);
-	}
-	temp = () => true;
-	isMoveValid = move => {
-		// To test whether a move is valid, we need to create a new client
-		// to ensure we are not changing the existing client's state
-		const client = newClient(this.client.fen())
-		const result = client.move(move, {sloppy: true});
-		return result != null
-	}
-	move = mv => this.client.move(mv, {sloppy: true})
-	getStatus = () => {
-		const client = this.client;
-		if (client.history().length == 0) return gameStatus.starting
-		if (client.in_checkmate()) return client.turn() == 'b' ? gameStatus.whiteWon : gameStatus.blackWon
-		if (client.in_stalemate()) return gameStatus.draw
-		return gameStatus.active
-	}
+  constructor(fen=startingFen){
+    this.client = newClient(fen);
+  }
+  temp = () => true;
+  isMoveValid = move => {
+    // To test whether a move is valid, we need to create a new client
+    // to ensure we are not changing the existing client's state
+    const client = newClient(this.client.fen())
+    const result = client.move(move, {sloppy: true});
+    return result != null
+  }
+  move = mv => this.client.move(mv, {sloppy: true})
+  getStatus = () => {
+    const client = this.client;
+    if (client.history().length == 0) return gameStatus.starting
+    if (client.in_checkmate()) return client.turn() == 'b' ? gameStatus.whiteWon : gameStatus.blackWon
+    if (client.in_stalemate()) return gameStatus.draw
+    return gameStatus.active
+  }
 }
 
 export const defaultGetRows = (movetext, newlineChar) => { // eslint-diable-line no-unused-vars
