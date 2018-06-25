@@ -34,19 +34,19 @@ export class Board extends React.Component {
   constructor(props){
     super(props);
   }
-	render = () => <Chessdiagram lip={flip} fen={ this.props.fen } squareSize={squareSize} lightSquareColor={lightSquareColor} darkSquareColor={darkSquareColor}/>
+  render = () => <Chessdiagram lip={flip} fen={ this.props.fen } squareSize={squareSize} lightSquareColor={lightSquareColor} darkSquareColor={darkSquareColor}/>
 }
 
 export class MoveTable extends React.Component {
   constructor(props){
     super(props);
   }
-	getMoves = () => defaultGetRows(this.props.pgn);
+  getMoves = () => defaultGetRows(this.props.pgn);
   rowMapper = (row, index) => ({moveNumber: row[0], white: row[1], black: row[2]});
   getData = () => this.getMoves().map(this.rowMapper);
-	render = () => {
+  render = () => {
     var data = this.getData();
-		if (data.length == 0) return <div style={{textAlign: "center"}}>No moves yet</div>
-		return <div id="moveTable" className={styles.gameTable}> <ReactTable pageSize={data.length} showPagination={false} data={data} columns={moveColumns} getTdProps={this.onRowClick}/></div>
-	}
+    if (data.length == 0) return <div style={{textAlign: "center"}}>No moves yet</div>
+    return <div id="moveTable" className={styles.gameTable}> <ReactTable pageSize={data.length} showPagination={false} data={data} columns={moveColumns} getTdProps={this.onRowClick}/></div>
+  }
 }

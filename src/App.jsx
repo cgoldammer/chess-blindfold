@@ -12,6 +12,13 @@ import { GameClient, startingFen, gameStatus } from './helpers.jsx'
 import { getBest } from './engine.js'
 
 
+/* The window to enter moves. There are currently two options:
+(1) Click on buttons, one for each move
+(2) Enter the move in a text field and hit enter - disabled by default
+
+Through trial and error I noticed that the first option simply works better, especially
+when using a phone.
+*/
 export class MoveEntry extends React.Component {
   constructor(props){
     super(props);
@@ -49,6 +56,9 @@ export class MoveEntry extends React.Component {
   }
   moveInvalid = () => {
   }
+  /* Display the move according to the app settings.
+  For instance, if the `showIfCheck` setting is `false`, then remove the "+" from any move
+  */
   displayMove = move => {
     var formattedMove = move;
     if (!this.props.parentState.showIfMate) {
@@ -110,6 +120,12 @@ const resetState = () => {
   }
 }
 
+/* Obtaining the starting state for a new game.
+The starting state is not the same as the reset state, because we want
+some properties, e.g. the Stockfish level, to persist throughout games.
+The reset state does not contain these properties, so we need to add them 
+here.
+*/
 var startingState = () => {
   var state = resetState()
   state['ownColorWhite'] = true
@@ -120,19 +136,33 @@ var startingState = () => {
   return state
 }
 
+
+/* Get the stockfish levels in terms of Elo rating.
+Stockfish levels range from 0 (1100 Elo) to 20 (3100 Elo)
+These are really very rough heuristics, but should be close enough for 
+our purposes.
+*/
+const getStockfishLevels = () => {
+  var values = [];
+  const numLevels = 20;
+  const minElo = 1100;
+  const maxElo = 3100;
+  for (var i=0; i<=numLevels; i++){
+    const elo = Math.floor((minElo + (maxElo - minElo) * (i / numLevels)) / 100) * 100;
+    values.push({value: i, label: elo})
+  }
+  return values
+}
+
+/* Displays the window to change settings */
 export class SettingsWindow extends React.Component {
   constructor(props){
     super(props);
   }
   render = () => {
-    var values = [];
-    const numLevels = 20;
-    const minElo = 1100;
-    const maxElo = 3100;
-    for (var i=0; i<=numLevels; i++){
-      const elo = Math.floor((minElo + (maxElo - minElo) * (i / numLevels)) / 100) * 100;
-      values.push({value: i, label: elo})
-    }
+    const values = getStockfishLevels()
+
+    /* Obtain the toggle button to turn a property on or off */
     const buttonForProperty = (name, display) => {
       return (
         <Row>
@@ -190,6 +220,8 @@ export class SettingsWindow extends React.Component {
   }
 }
 
+/* The statuswindow provides the status of the games and the last moves
+by the player and the computer */
 export class StatusWindow extends React.Component {
   constructor(props){
     super(props);
@@ -214,6 +246,7 @@ export class StatusWindow extends React.Component {
   }
 }
 
+/* The main app, which pulls in all the other windows. */
 export class App extends React.Component {
   constructor(props){
     super(props);
@@ -245,10 +278,12 @@ export class App extends React.Component {
     getBest(this.state.skillLevel, fen, this.makeMove)
   }
   shownElement = () => {
-    if (this.state.showType == "make") return this.makeMoveElement()
-    if (this.state.showType == "moves") return this.moveTableElement()
-    if (this.state.showType == "board") return this.boardElement()
-    if (this.state.showType == "settings") return this.settingsElement()
+    switch (this.state.showType) {
+      case "make": return this.makeMoveElement()
+      case "moves": return this.moveTableElement()
+      case "board": return this.boardElement()
+      case "settings": return this.settingsElement()
+    }
   }
   getLastMove = (offsetTrue, offsetFalse) => () => {
     const history = this.state.gameClient.client.history()

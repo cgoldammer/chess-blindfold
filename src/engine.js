@@ -4,9 +4,8 @@ Just importing twice, and using the one version that works */
 import { Chess } from 'chess.js';
 import Chess2 from 'chess.js';
 
-/* Todo:
-For test environment, mock out stockfish with a function that
-returns a random move.
+/* 
+Loading stockfish. This will require web workers to function correctly.
 */
 try {
   var sf = new Worker('./stockfish.js');
@@ -25,7 +24,10 @@ sf.onmessage = function(event) {
 
 /* 
 Get the best move in a given position, and call the `callback` with the
-move when it's found 
+move when it's found.
+Right now, we are running analyses with very low depth. I don't think that should 
+be a problem, since Stockfish is extremely strong even with such low depth, but
+let me know if you feel like the depth should be increased or settable in the app.
 */
 export const getBest = (level, fen, callback) => {
   sf.postMessage('position fen ' + fen);
