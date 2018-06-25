@@ -1,7 +1,3 @@
-.Green {
-  color: pink;
-}
-
 .moveButton {
   font-size: 125%;
   background: transparent;
@@ -15,7 +11,6 @@
 .answer {
   margin: 20px 20px 20px 20px;
 }
-
 
 .title {
   font-size: 160%;
