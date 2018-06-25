@@ -20,3 +20,9 @@ The app is optimized for mobile play and aims to be as simple as possible. You s
 # Help
 
 I'm always greateful for collaborators!
+
+# Compiling the code
+
+To compile the app, you need to run the `setup.sh` script. The main task of the script is to download compiled code for Stockfish.js.
+
+
