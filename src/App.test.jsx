@@ -89,6 +89,8 @@ describe('In the UI', () => {
   })
   test('if I leave the text field empty and click "submit", the moves stay empty', () => {
     const wrapper = mount(<App autoMove={ false } showInput={ true }/>);
+    wrapper.setState({enterMoveByKeyboard: true});
+    wrapper.update();
     // The #resetButton returns two elements - this seems like a bug?
     wrapper.find('#submitButton').first().simulate('click');
     wrapper.update()
@@ -96,6 +98,8 @@ describe('In the UI', () => {
   })
   test('if I enter a valid move and click "submit", the move is added', () => {
     const wrapper = mount(<App autoMove={ false } showInput={ true }/>);
+    wrapper.setState({enterMoveByKeyboard: true});
+    wrapper.update();
     const moveEntry = wrapper.find(MoveEntry);
     moveEntry.instance().setValue("e4");
     wrapper.find('#submitButton').first().simulate('click');

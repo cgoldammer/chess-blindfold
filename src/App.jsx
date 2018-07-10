@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styles from './App.css';
-import { Label, Form, FormGroup, ControlLabel, ToggleButtonGroup, ToggleButton, ButtonGroup, Panel, ListGroup, ListGroupItem, Navbar, Nav, NavItem, NavDropdown, Button, DropdownButton, MenuItem, FormControl, Breadcrumb, Modal, Grid, Row, Col } from 'react-bootstrap';
+import { HelpBlock, Label, Form, FormGroup, ControlLabel, ToggleButtonGroup, ToggleButton, ButtonGroup, Panel, ListGroup, ListGroupItem, Navbar, Nav, NavItem, NavDropdown, Button, DropdownButton, MenuItem, FormControl, Breadcrumb, Modal, Grid, Row, Col } from 'react-bootstrap';
 import Select from 'react-select'
 
 import { AppNavbar } from './AppNavbar.jsx';
@@ -22,7 +22,7 @@ when using a phone.
 export class MoveEntry extends React.Component {
   constructor(props){
     super(props);
-    this.state = { value: '' }
+    this.state = { value: '', warning: null }
   }
   focus = () => {
     let node = ReactDOM.findDOMNode(this.refs.inputNode);
@@ -45,17 +45,16 @@ export class MoveEntry extends React.Component {
     const moveValid = this.props.gameClient.isMoveValid(move);
     if (moveValid){
       this.props.makeMove(move);
-      this.setState({ value: ''})
+      this.setState({ value: '', warning: null})
     }
     else {
-      this.moveInvalid();
+      this.showWarning("Move is not valid");
     }
   }
   componentDidUpdate = (prevProps, prevState, snapshot) => {
     this.focus()
   }
-  moveInvalid = () => {
-  }
+  showWarning = warning => this.setState({warning: warning});
   /* Display the move according to the app settings.
   For instance, if the `showIfCheck` setting is `false`, then remove the "+" from any move
   */
@@ -79,7 +78,10 @@ export class MoveEntry extends React.Component {
         <div className={styles.moveButton} onClick={ () => this.props.makeMove(move) }>{ this.displayMove(move) }</div>
       </Col>
     )
-    const input = !this.props.showInput ? null :
+    const input = !this.props.enterMoveByKeyboard ? 
+        <Row style={{ marginLeft: 0, marginRight: 10 }}>
+          { moves.map(buttonForMove) }
+        </Row> :
         <div>
           <Row style={{ marginLeft: 0, marginRight: 0 }}>
             <Col sm={4} smOffset={4}>
@@ -93,18 +95,16 @@ export class MoveEntry extends React.Component {
               />
             </Col>
             <Col sm={2}>
-              <Button id="submitButton" onClick={ this.submit }>Submit</Button>
+              <Button bsSize="large" id="submitButton" onClick={ this.submit }>Submit</Button>
+            </Col>
+          </Row>
+          <Row style={{ marginLeft: 0, marginRight: 0 }}>
+            <Col sm={6} smOffset={4}>
+              <HelpBlock bsStyle="warning" style= {{ color: "red" }} > { this.state.warning } </HelpBlock>
             </Col>
           </Row>
         </div>
-    return (
-      <div>
-        { input }
-        <Row style={{ marginLeft: 0, marginRight: 10 }}>
-          { moves.map(buttonForMove) }
-        </Row>
-      </div>
-    )
+    return (<div>{ input }</div>)
   }
 }
 
@@ -133,6 +133,7 @@ var startingState = () => {
   state['showIfMate'] = false
   state['showIfTakes'] = true
   state['showIfCheck'] = true
+  state['enterMoveByKeyboard'] = false;
   return state
 }
 
@@ -180,6 +181,15 @@ export class SettingsWindow extends React.Component {
     }
 
     const hr = <hr style={{ height: "2px", border: "0 none", color: "lightGray", backgroundColor: "lightGray" }}/>
+    const displaySettings = this.props.parentState.enterMoveByKeyboard ? null :
+      <div>
+        { hr }
+        { buttonForProperty('showIfMate', 'Show if move is mate') }
+        { hr }
+        { buttonForProperty('showIfCheck', 'Show if move is check') }
+        { hr }
+        { buttonForProperty('showIfTakes', 'Show is move is taking piece') }
+      </div>
 
     return (
       <div>
@@ -209,12 +219,8 @@ export class SettingsWindow extends React.Component {
           </Col>
         </Row>
         { hr }
-        { buttonForProperty('showIfMate', 'Show if move is mate') }
-        { hr }
-        { buttonForProperty('showIfCheck', 'Show if move is check') }
-        { hr }
-        { buttonForProperty('showIfTakes', 'Show is move is taking piece') }
-        { hr }
+        { buttonForProperty('enterMoveByKeyboard', 'Enter moves by keyboard') }
+        { displaySettings }
       </div>
     )
   }
@@ -297,7 +303,7 @@ export class App extends React.Component {
       <StatusWindow status={ this.state.gameClient.getStatus() } humanMove = { this.getLastHumanMove() } computerMove = { this.getLastComputerMove() }/>
       <Row>
         <MoveEntry 
-          showInput={ this.props.showInput } 
+          enterMoveByKeyboard={ this.state.enterMoveByKeyboard } 
           gameClient={ this.state.gameClient } 
           makeMove={ this.makeMove }
           parentState = { this.state }
