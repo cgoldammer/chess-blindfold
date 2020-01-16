@@ -1,4 +1,5 @@
 node_modules/
+lib/stockfish.js
 data/data_private.json
 data/template.json
 *.sw*
