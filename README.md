@@ -10,7 +10,9 @@ The app is optimized for mobile play and aims to be as simple as possible. You s
 - Change the stockfish difficulty
 - Provide different display options for possible moves. For instance, don't show whether a move is taking a piece, which makes the game harder.
 
-# Todo
+# Possible improvements
+
+Note: I'm not actively developing this library, but always happy for others to submit PRs and will review them.
 
 - Rewind moves by clicking on the list of moves
 - Show board with only pawn structure
