@@ -104,12 +104,12 @@ export class MoveEntry extends React.Component {
       </Col>
     )
     const input = !this.props.enterMoveByKeyboard ? 
-        <Row style={{ marginLeft: 0, marginRight: 10 }}>
+        <Row style={{ marginLeft: 10, marginRight: 10 }}>
           { moves.map(buttonForMove) }
         </Row> :
-        <div>
-          <Row style={{ marginLeft: 0, marginRight: 0 }}>
-            <Col sm={4} smOffset={4}>
+				<div>
+					<Row>
+            <Col sm={{span:4, offset:4}}>
               <FormControl
                 bsSize="large"
                 ref="inputNode"
@@ -123,12 +123,12 @@ export class MoveEntry extends React.Component {
               <Button bsSize="large" id="submitButton" onClick={ this.submit }>Submit</Button>
             </Col>
           </Row>
-          <Row style={{ marginLeft: 0, marginRight: 0 }}>
-            <Col sm={6} smOffset={4}>
-              <HelpBlock bsStyle="warning" style= {{ color: "red" }} > { this.state.warning } </HelpBlock>
-            </Col>
-          </Row>
-        </div>
+					<Row>
+						<Col sm={{span:3, offset: 6}}>
+							<div style= {{ color: "red" }} > { this.state.warning } </div>
+						</Col>
+					</Row>
+				</div>
     return (<div>{ input }</div>)
   }
 }
@@ -158,7 +158,7 @@ var startingState = () => {
   state['showIfMate'] = false
   state['showIfTakes'] = true
   state['showIfCheck'] = true
-  state['enterMoveByKeyboard'] = false;
+  state['enterMoveByKeyboard'] = true;
   return state
 }
 
@@ -371,13 +371,13 @@ export class App extends React.Component {
         <AppNavbar/>
         <Container>
           <Row>
-            <Col sm={6}>
+            <Col md={{span:6, offset: 3}}>
               <Row>
-								<div class="btn-group d-flex w-100" role="group">
-									<Button variant="light" class="btn btn-default w-100" onClick={() => this.handleChange("make")}>Play</Button>
-									<Button variant="light" class="btn btn-default w-100" onClick={() => this.handleChange("moves")}>Moves</Button>
-									<Button variant="light" class="btn btn-default w-100" onClick={() => this.handleChange("board")}>Board</Button>
-									<Button variant="light" class="btn btn-default w-100" onClick={() => this.handleChange("settings")}>Settings</Button>
+								<div className="btn-group d-flex w-100" role="group">
+									<Button variant="light" className="btn btn-default w-100" onClick={() => this.handleChange("make")}>Play</Button>
+									<Button variant="light" className="btn btn-default w-100" onClick={() => this.handleChange("moves")}>Moves</Button>
+									<Button variant="light" className="btn btn-default w-100" onClick={() => this.handleChange("board")}>Board</Button>
+									<Button variant="light" className="btn btn-default w-100" onClick={() => this.handleChange("settings")}>Settings</Button>
 								</div>
 						</Row>
               <div style={{ marginTop: 10 }}>
