@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styles from './App.css';
-import { HelpBlock, Label, Form, FormGroup, ControlLabel, ToggleButtonGroup, ToggleButton, ButtonGroup, Panel, ListGroup, ListGroupItem, Navbar, Nav, NavItem, NavDropdown, Button, DropdownButton, MenuItem, FormControl, Breadcrumb, Modal, Grid, Row, Col } from 'react-bootstrap';
+import { HelpBlock, Badge, Form, FormGroup, ControlBadge, ToggleButtonGroup, ToggleButton, ButtonGroup, Panel, ListGroup, ListGroupItem, Navbar, Nav, NavItem, NavDropdown, Button, DropdownButton, MenuItem, FormControl, Breadcrumb, Modal, Container, Row, Col } from 'react-bootstrap';
 import Select from 'react-select'
 
 import { AppNavbar } from './AppNavbar.jsx';
@@ -11,6 +11,31 @@ import { Board, MoveTable } from './ChessApp.jsx';
 import { GameClient, startingFen, gameStatus } from './helpers.jsx'
 import { getBest } from './engine.js'
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service
+    logErrorToMyService(error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return <h1>Something went wrong.</h1>;
+    }
+
+    return this.props.children; 
+  }
+}
 
 /* The window to enter moves. There are currently two options:
 (1) Click on buttons, one for each move
@@ -171,9 +196,9 @@ export class SettingsWindow extends React.Component {
             <div>{ display }</div>
           </Col>
           <Col xs={6}>
-            <ToggleButtonGroup justified type="radio" name="options" value={ this.props.parentState[name] } onChange={value => this.props.setProperty(name, value)}>
-              <ToggleButton value={ true }>Yes</ToggleButton>
-              <ToggleButton value={ false }>No</ToggleButton>
+            <ToggleButtonGroup type="radio" name="options" value={ this.props.parentState[name] } onChange={value => this.props.setProperty(name, value)}>
+              <ToggleButton variant="light" value={ true }>Yes</ToggleButton>
+              <ToggleButton variant="light" value={ false }>No</ToggleButton>
             </ToggleButtonGroup>
           </Col>
         </Row>
@@ -212,9 +237,9 @@ export class SettingsWindow extends React.Component {
             <div> You play: </div>
           </Col>
           <Col xs={6}>
-            <ToggleButtonGroup justified type="radio" name="options" value={ this.props.ownColorWhite } onChange={this.props.setOwnColor}>
-              <ToggleButton value={ true }>White</ToggleButton>
-              <ToggleButton value={ false }>Black</ToggleButton>
+            <ToggleButtonGroup type="radio" name="options" value={ this.props.ownColorWhite } onChange={this.props.setOwnColor}>
+              <ToggleButton variant="light" value={ true }>White</ToggleButton>
+              <ToggleButton variant="light" value={ false }>Black</ToggleButton>
             </ToggleButtonGroup>
           </Col>
         </Row>
@@ -233,24 +258,28 @@ export class StatusWindow extends React.Component {
     super(props);
   }
   render = () => {
-    const humanText = this.props.humanMove ? (<div><span>You played </span><Label>{ this.props.humanMove }</Label></div>): <span>Make your move!</span>
-    const computerText = this.props.computerMove ? (<div><span>Computer played </span><Label>{ this.props.computerMove }</Label></div>): <span>Computer is waiting...</span>
-    const style = { height:"50px", fontSize: "200%", textAlign: "center", marginTop: 10}
+    const humanText = this.props.humanMove ? (<div><span>You played </span><Badge>{ this.props.humanMove }</Badge></div>): <span>Make your move!</span>
+    const computerText = this.props.computerMove ? (<div><span>Computer played </span><Badge>{ this.props.computerMove }</Badge></div>): <span>Computer is waiting...</span>
     return (
       <div>
-        <Row style= { style }>
-          <Label bsStyle={ this.props.status[2] }> { this.props.status[1] } </Label>
-        </Row>
-        <Row style= { style }>
-          { humanText }
-        </Row>
-        <Row style={ style }>
-          { computerText }
-        </Row>
+					<Row className="justify-content-md-center">
+						<h1><Badge variant={ this.props.status[2] }> { this.props.status[1] } </Badge></h1>
+					</Row>
+					<Row className="justify-content-md-center">
+						<span className = {styles.statusStyle}>
+							{ humanText }
+						</span>
+					</Row>
+					<Row className="justify-content-md-center">
+						<span className = {styles.statusStyle}>
+							{ computerText }
+						</span>
+					</Row>
       </div>
     )
   }
 }
+
 
 /* The main app, which pulls in all the other windows. */
 export class App extends React.Component {
@@ -340,23 +369,23 @@ export class App extends React.Component {
     return (
       <div>
         <AppNavbar/>
-        <Grid>
+        <Container>
           <Row>
-            <Col sm={6} smOffset={3}>
+            <Col sm={6}>
               <Row>
-                <ToggleButtonGroup justified type="radio" name="options" value={ this.state.showType } onChange={this.handleChange}>
-                  <ToggleButton value={"make"}>Play</ToggleButton>
-                  <ToggleButton value={"moves"}>Moves</ToggleButton>
-                  <ToggleButton value={"board"}>Board</ToggleButton>
-                  <ToggleButton value={"settings"}>Settings</ToggleButton>
-                </ToggleButtonGroup>
-              </Row>
+								<div class="btn-group d-flex w-100" role="group">
+									<Button variant="light" class="btn btn-default w-100" onClick={() => this.handleChange("make")}>Play</Button>
+									<Button variant="light" class="btn btn-default w-100" onClick={() => this.handleChange("moves")}>Moves</Button>
+									<Button variant="light" class="btn btn-default w-100" onClick={() => this.handleChange("board")}>Board</Button>
+									<Button variant="light" class="btn btn-default w-100" onClick={() => this.handleChange("settings")}>Settings</Button>
+								</div>
+						</Row>
               <div style={{ marginTop: 10 }}>
                 { this.shownElement() } 
               </div>
             </Col>
           </Row>
-        </Grid>
+        </Container>
       </div>
     )
   }

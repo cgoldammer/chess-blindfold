@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { App } from './App.jsx';
+import { App, App2 } from './App.jsx';
+import 'bootstrap/dist/css/bootstrap.css';
 
 const app = <App autoMove={ true } />;
 ReactDOM.render(app, document.getElementById('app'));

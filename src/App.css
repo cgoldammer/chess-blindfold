@@ -21,3 +21,24 @@
   height: 100px;
   minHeight: 100px;
 }
+
+.statusStyle {
+  height: 50px;
+  font-size: 200%;
+  margin-top: 10;
+}
+
+.center {
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+}
+ 
+.btnGroup {
+  display: flex;
+}
+
+.btnFlex {
+  flex: 1;
+	height: 200px;
+}

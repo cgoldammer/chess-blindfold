@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Nav, Navbar, NavDropdown, Modal, NavItem, MenuItem } from "react-bootstrap";
+import React from "react";
+import { Nav, Navbar, NavDropdown, Modal, MenuItem } from "react-bootstrap";
 
 export const appName = "Blindfold chess";
 
@@ -12,18 +12,16 @@ export class AppNavbar extends React.Component {
   render = () => {
     return (
       <div style={{ marginBottom: 0 }}>
-        <Navbar collapseOnSelect style={{ marginBottom: 0, borderRadius: 0 }}>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <a href="#brand">Blindfold chess</a>
-            </Navbar.Brand>
-            <Navbar.Toggle />
-          </Navbar.Header>
+        <Navbar bg="light" expand="lg" style={{ marginBottom: 0, borderRadius: 0 }}>
+          <Navbar.Brand href="#brand">
+            Blindfold chess
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse>
-            <Nav pullRight>
-              <NavItem onClick={ () => this.setAbout(true) }>
+            <Nav className="mr-auto">
+              <Nav.Link onClick={ () => this.setAbout(true) }>
                 About
-              </NavItem>
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>

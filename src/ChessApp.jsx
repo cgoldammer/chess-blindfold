@@ -1,7 +1,8 @@
 import React from 'react';
-import ReactTable from 'react-table';
+import { useTable } from 'react-table'
 import styles from './ChessApp.css';
-import { Table, ToggleButtonGroup, ToggleButton, ButtonGroup, Panel, ListGroup, ListGroupItem, Navbar, Nav, NavItem, NavDropdown, Grid, Row, Col, Button, DropdownButton, MenuItem, FormControl, Breadcrumb, Modal } from 'react-bootstrap';
+import styled from 'styled-components'
+import { ToggleButtonGroup, ToggleButton, ButtonGroup, Panel, ListGroup, ListGroupItem, Navbar, Nav, NavItem, NavDropdown, Grid, Row, Col, Button, DropdownButton, MenuItem, FormControl, Breadcrumb, Modal } from 'react-bootstrap';
 import Chessdiagram from 'react-chessdiagram'; 
 import { defaultGetRows, calculateMoveNumber } from "./helpers.jsx";
 
@@ -28,7 +29,90 @@ const cols = [
     accessor: "black"
   }
 ];
-const moveColumns = cols;
+
+
+const Styles = styled.div`
+  padding: 1rem;
+
+  table {
+    border-spacing: 0;
+    border: 1px solid black;
+
+    tr {
+      :last-child {
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
+
+    th,
+    td {
+      margin: 0;
+      padding: 0.5rem;
+      border-bottom: 1px solid black;
+      border-right: 1px solid black;
+
+      :last-child {
+        border-right: 0;
+      }
+    }
+
+    td {
+      input {
+        font-size: 1rem;
+        padding: 0;
+        margin: 0;
+        border: 0;
+      }
+    }
+  }
+
+  .pagination {
+    padding: 0.5rem;
+  }
+`
+
+function Table({ columns, data }) {
+  // Use the state and functions returned from useTable to build your UI
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable({
+    columns,
+    data,
+  })
+
+  // Render the UI for your table
+  return (
+    <table {...getTableProps()}>
+      <thead>
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody {...getTableBodyProps()}>
+        {rows.map((row, i) => {
+          prepareRow(row)
+          return (
+            <tr {...row.getRowProps()}>
+              {row.cells.map(cell => {
+                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+              })}
+            </tr>
+          )
+        })}
+      </tbody>
+    </table>
+  )
+}
 
 export class Board extends React.Component {
   constructor(props){
@@ -47,6 +131,10 @@ export class MoveTable extends React.Component {
   render = () => {
     var data = this.getData();
     if (data.length == 0) return <div style={{textAlign: "center"}}>No moves yet</div>
-    return <div id="moveTable" className={styles.gameTable}> <ReactTable pageSize={data.length} showPagination={false} data={data} columns={moveColumns} getTdProps={this.onRowClick}/></div>
+    return (<Row className="justify-content-md-center"> 
+			<Styles>
+				<Table columns={cols} data={data} />
+			</Styles>
+		</Row>)
   }
 }
