@@ -158,7 +158,7 @@ var startingState = () => {
   state['showIfMate'] = false
   state['showIfTakes'] = true
   state['showIfCheck'] = true
-  state['enterMoveByKeyboard'] = true;
+  state['enterMoveByKeyboard'] = false;
   return state
 }
 
