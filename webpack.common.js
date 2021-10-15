@@ -18,7 +18,7 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
-          presets: ['es2015', 'react', 'stage-0']
+          presets: ['env', 'react', 'stage-0']
         }
       },
 			{
@@ -32,7 +32,7 @@ module.exports = {
 				test: /\.css$/,
 				loader: 'css-loader',
 				include: [path.join(__dirname, 'src')],
-				query: { 
+				query: {
 					modules: true,
 					localIdentName: '[name]__[local]___[hash:base64:5]'
 				}
