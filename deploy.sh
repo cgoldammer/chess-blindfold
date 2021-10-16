@@ -3,7 +3,8 @@ set -e
 
 echo "Starting deploy"
 
-# Building the library if the tests succeed
+# Building the library
+npm run test
 npm run build
 
 CURRENTDIR=~/blindfold2

@@ -12,13 +12,13 @@ export class AppNavbar extends React.Component {
   render = () => {
     return (
       <div style={{ marginBottom: 0 }}>
-        <Navbar bg="light" expand="lg" style={{ marginBottom: 0, borderRadius: 0 }}>
+        <Navbar className="justify-content-center" bg="light" expand="lg" style={{ marginBottom: 0, borderRadius: 0 }}>
           <Navbar.Brand href="#brand">
             Blindfold chess
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse>
-            <Nav className="mr-auto">
+            <Nav>
               <Nav.Link onClick={ () => this.setAbout(true) }>
                 About
               </Nav.Link>

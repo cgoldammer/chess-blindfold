@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styles from './App.css';
-import { HelpBlock, Badge, Form, FormGroup, ControlBadge, ToggleButtonGroup, ToggleButton, ButtonGroup, Panel, ListGroup, ListGroupItem, Navbar, Nav, NavItem, NavDropdown, Button, DropdownButton, MenuItem, FormControl, Breadcrumb, Modal, Container, Row, Col } from 'react-bootstrap';
+import { Jumbotron, HelpBlock, Badge, Form, FormGroup, ControlBadge, ToggleButtonGroup, ToggleButton, ButtonGroup, Panel, ListGroup, ListGroupItem, Navbar, Nav, NavItem, NavDropdown, Button, DropdownButton, MenuItem, FormControl, Breadcrumb, Modal, Container, Row, Col } from 'react-bootstrap';
 import Select from 'react-select'
 
 import { AppNavbar } from './AppNavbar.jsx';
@@ -97,6 +97,8 @@ export class MoveEntry extends React.Component {
     return formattedMove
   }
   render = () => {
+        /* <div className={styles.moveButton} onClick={ () => this.props.makeMove(move) }>{ this.displayMove(move) }</div>*/
+    console.log(styles)
     const moves = this.props.gameClient.client.moves();
     const buttonForMove = move => (
       <Col key={ move } xs={3} md={2}>
@@ -111,7 +113,6 @@ export class MoveEntry extends React.Component {
 					<Row>
             <Col sm={{span:4, offset:4}}>
               <FormControl
-                bsSize="large"
                 ref="inputNode"
                 type="text"
                 onChange={ this.onChange }
@@ -120,7 +121,7 @@ export class MoveEntry extends React.Component {
               />
             </Col>
             <Col sm={2}>
-              <Button bsSize="large" id="submitButton" onClick={ this.submit }>Submit</Button>
+              <Button id="submitButton" onClick={ this.submit }>Submit</Button>
             </Col>
           </Row>
 					<Row>
@@ -188,18 +189,39 @@ export class SettingsWindow extends React.Component {
   render = () => {
     const values = getStockfishLevels()
 
+    const valsButtons = [
+      { str: 'Yes', value: true },
+      { str: 'False', value: false }
+    ];
+
+    const valsColor = [
+      { str: 'White', value: true },
+      { str: 'Black', value: false }
+    ];
+
     /* Obtain the toggle button to turn a property on or off */
-    const buttonForProperty = (name, display) => {
+    const buttonForProperty = (name, display, values) => {
       return (
         <Row>
           <Col xs={6}>
             <div>{ display }</div>
           </Col>
           <Col xs={6}>
-            <ToggleButtonGroup type="radio" name="options" value={ this.props.parentState[name] } onChange={value => this.props.setProperty(name, value)}>
-              <ToggleButton variant="light" value={ true }>Yes</ToggleButton>
-              <ToggleButton variant="light" value={ false }>No</ToggleButton>
-            </ToggleButtonGroup>
+            <ButtonGroup
+              type="radio"
+              name="options"
+              value={ this.props.parentState[name] } 
+            >
+            { values.map((val, idx) => (
+              <ToggleButton 
+                key={idx}
+                value={val.value} 
+                variant={this.props.parentState[name]==val.value ? "primary" : "outline-primary"} 
+                onClick={() => this.props.setProperty(name, val.value)} >
+                {val.str}
+              </ToggleButton>
+            )) }
+            </ButtonGroup>
           </Col>
         </Row>
       )
@@ -209,11 +231,11 @@ export class SettingsWindow extends React.Component {
     const displaySettings = this.props.parentState.enterMoveByKeyboard ? null :
       <div>
         { hr }
-        { buttonForProperty('showIfMate', 'Show if move is mate') }
+        { buttonForProperty('showIfMate', 'Show if move is mate', valsButtons) }
         { hr }
-        { buttonForProperty('showIfCheck', 'Show if move is check') }
+        { buttonForProperty('showIfCheck', 'Show if move is check', valsButtons) }
         { hr }
-        { buttonForProperty('showIfTakes', 'Show is move is taking piece') }
+        { buttonForProperty('showIfTakes', 'Show is move is taking piece', valsButtons) }
       </div>
 
     return (
@@ -225,26 +247,17 @@ export class SettingsWindow extends React.Component {
           <Col xs={6}>
             <Select
               clearable={ false }
-              value={ this.props.skillLevel }
+              defaultValue={ values[0] }
+              getValue={ this.props.skillLevel }
               onChange={ this.props.setSkill }
               options={ values }
             />
           </Col>
         </Row>
         { hr }
-        <Row>
-          <Col xs={6}>
-            <div> You play: </div>
-          </Col>
-          <Col xs={6}>
-            <ToggleButtonGroup type="radio" name="options" value={ this.props.ownColorWhite } onChange={this.props.setOwnColor}>
-              <ToggleButton variant="light" value={ true }>White</ToggleButton>
-              <ToggleButton variant="light" value={ false }>Black</ToggleButton>
-            </ToggleButtonGroup>
-          </Col>
-        </Row>
+        { buttonForProperty('ownColorWhite', 'You play', valsColor) }
         { hr }
-        { buttonForProperty('enterMoveByKeyboard', 'Enter moves by keyboard') }
+        { buttonForProperty('enterMoveByKeyboard', 'Enter moves by keyboard', valsButtons) }
         { displaySettings }
       </div>
     )
@@ -258,22 +271,26 @@ export class StatusWindow extends React.Component {
     super(props);
   }
   render = () => {
-    const humanText = this.props.humanMove ? (<div><span>You played </span><Badge>{ this.props.humanMove }</Badge></div>): <span>Make your move!</span>
-    const computerText = this.props.computerMove ? (<div><span>Computer played </span><Badge>{ this.props.computerMove }</Badge></div>): <span>Computer is waiting...</span>
+    const humanText = this.props.humanMove ? (<div><span>You played </span><Badge bg="secondary"> { this.props.humanMove }</Badge></div>): <span>Make your move!</span>
+    const computerText = this.props.computerMove ? (<div><span>Computer played </span><Badge bg="secondary">{ this.props.computerMove }</Badge></div>): <span>Computer is waiting...</span>
     return (
       <div>
-					<Row className="justify-content-md-center">
-						<h1><Badge variant={ this.props.status[2] }> { this.props.status[1] } </Badge></h1>
+					<Row>
+            <h1 className="text-center"><Badge variant={ this.props.status[2] }> { this.props.status[1] } </Badge></h1>
 					</Row>
-					<Row className="justify-content-md-center">
-						<span className = {styles.statusStyle}>
-							{ humanText }
-						</span>
+					<Row>
+            <div className="text-center">
+              <span className = {styles.statusStyle}>
+                { humanText }
+              </span>
+            </div>
 					</Row>
-					<Row className="justify-content-md-center">
-						<span className = {styles.statusStyle}>
-							{ computerText }
-						</span>
+					<Row>
+            <div className="text-center">
+              <span className = {styles.statusStyle}>
+                { computerText }
+              </span>
+            </div>
 					</Row>
       </div>
     )
@@ -339,20 +356,27 @@ export class App extends React.Component {
         />
       </Row>
       <Row style= {{ marginTop: 20}}>
-        { this.state.gameClient.getStatus() == gameStatus.starting ? null :
-          <Col xs={6} xsOffset={3}>
-            <Button bsStyle="warning" block id="resetButton" onClick={ this.reset }>Start new game</Button>
-          </Col>
-        }
+        <div className="text-center">
+          { this.state.gameClient.getStatus() == gameStatus.starting ? null :
+              <Button className={styles.newGameButton} variant="warning" block id="resetButton" onClick={ this.reset }>Start new game</Button>
+          }
+        </div>
       </Row>
     </div>
   )
   boardElement = () => <Board fen={ this.state.gameClient.client.fen() }/>
   handleChange = value => this.setState({ showType: value })
-  moveTableElement = () => <MoveTable pgn={ this.state.gameClient.client.pgn() }/>
-  setSkill = skill => this.setState({ skillLevel: skill.value })
+  moveTableElement = () => {
+    return (<div>
+      <MoveTable pgn={ this.state.gameClient.client.pgn() }/>
+    </div>)
+  }
+  setSkill = skill => {
+    this.setState({ skillLevel: skill.value });
+  }
   setOwnColor = isWhite => this.setState({ ownColorWhite: isWhite }, this.makeComputerMove)
   setProperty = (name, value) => {
+    console.log("Setting" + name + value);
     var newState = {}
     newState[name] = value
     this.setState(newState);
@@ -368,23 +392,23 @@ export class App extends React.Component {
   render = () => {
     return (
       <div>
-        <AppNavbar/>
         <Container>
-          <Row>
-            <Col md={{span:6, offset: 3}}>
-              <Row>
-								<div className="btn-group d-flex w-100" role="group">
-									<Button variant="light" className="btn btn-default w-100" onClick={() => this.handleChange("make")}>Play</Button>
-									<Button variant="light" className="btn btn-default w-100" onClick={() => this.handleChange("moves")}>Moves</Button>
-									<Button variant="light" className="btn btn-default w-100" onClick={() => this.handleChange("board")}>Board</Button>
-									<Button variant="light" className="btn btn-default w-100" onClick={() => this.handleChange("settings")}>Settings</Button>
-								</div>
-						</Row>
-              <div style={{ marginTop: 10 }}>
-                { this.shownElement() } 
-              </div>
-            </Col>
+          <Col md={{span:6, offset: 3}}>
+            <Row>
+              <AppNavbar/>
+            </Row>
+            <Row>
+              <ButtonGroup className="mb-2">
+                <Button variant="secondary" className="w-100" onClick={() => this.handleChange("make")}>Play</Button>
+                <Button variant="secondary" className="btn btn-default w-100" onClick={() => this.handleChange("moves")}>Moves</Button>
+                <Button variant="secondary" className="btn btn-default w-100" onClick={() => this.handleChange("board")}>Board</Button>
+                <Button variant="secondary" className="btn btn-default w-100" onClick={() => this.handleChange("settings")}>Settings</Button>
+              </ButtonGroup>
           </Row>
+            <div style={{ marginTop: 10 }}>
+              { this.shownElement() } 
+            </div>
+          </Col>
         </Container>
       </div>
     )

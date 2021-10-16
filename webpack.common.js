@@ -21,26 +21,26 @@ module.exports = {
           presets: ['@babel/preset-env', '@babel/preset-react']
         }
       },
+
 			// {
 			// 	test: /\.css$/,
-			// 	loader: 'style-loader',
-			// 	// options: {
-			// 	// 	hmr: true
-			// 	// }
+			// 	loader: 'css-loader',
+			// 	include: [path.join(__dirname, 'src')],
+			// 	options: {
+          // modules: {
+            // localIdentName: '[name]__[local]___[hash:base64:5]'
+          // }
+			// 	}
 			// },
+
 			{
 				test: /\.css$/,
-				loader: 'css-loader',
-				include: [path.join(__dirname, 'src')],
-				// options: {
-				// 	modules: true,
-				// 	localIdentName: '[name]__[local]___[hash:base64:5]'
-				// }
-			},
-			{
-				test: /\.css$/,
-				use: ['style-loader', 'css-loader'],
-				include: [path.join(__dirname, 'node_modules')]
+				use: [
+          'style-loader',
+          { 
+            loader: 'css-loader',
+            options: {modules: true}
+          }]
 			}
     ]
   },
