@@ -17,29 +17,29 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
-        query: {
-          presets: ['env', 'react', 'stage-0']
+        options: {
+          presets: ['@babel/preset-env', '@babel/preset-react']
         }
       },
-			{
-				test: /\.css$/,
-				loader: 'style-loader',
-				options: {
-					hmr: true
-				}
-			},
+			// {
+			// 	test: /\.css$/,
+			// 	loader: 'style-loader',
+			// 	// options: {
+			// 	// 	hmr: true
+			// 	// }
+			// },
 			{
 				test: /\.css$/,
 				loader: 'css-loader',
 				include: [path.join(__dirname, 'src')],
-				query: {
-					modules: true,
-					localIdentName: '[name]__[local]___[hash:base64:5]'
-				}
+				// options: {
+				// 	modules: true,
+				// 	localIdentName: '[name]__[local]___[hash:base64:5]'
+				// }
 			},
 			{
 				test: /\.css$/,
-				loader: 'style-loader!css-loader',
+				use: ['style-loader', 'css-loader'],
 				include: [path.join(__dirname, 'node_modules')]
 			}
     ]

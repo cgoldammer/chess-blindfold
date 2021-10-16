@@ -1,4 +1,4 @@
-const merge = require('webpack-merge');
+const merge = require('webpack-merge').merge;
 const webpack = require('webpack');
 const common = require('./webpack.common.js');
 
@@ -10,14 +10,11 @@ const features = {
 devExports = {
   mode: 'development',
   devtool: "eval-source-map",
-  output: { path: __dirname, filename: 'lib/bundle.js'},
   devServer: {
-    contentBase: './lib',
-    hot: true,
+    static: './serve_content',
     port: 8082,
     host: '0.0.0.0',
-    disableHostCheck: true,
-    watchOptions: { aggregateTimeout: 300, poll: 1000 },
+    historyApiFallback: { index: 'index_dev.html' },
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",

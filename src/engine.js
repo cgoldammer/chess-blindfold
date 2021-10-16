@@ -8,7 +8,7 @@ import Chess2 from 'chess.js';
 Loading stockfish. This will require web workers to function correctly.
 */
 try {
-  var sf = new Worker('./stockfish.js');
+  var sf = new Worker('./shared/stockfish.js');
 }
 catch(err) {
   var sf = ({})
