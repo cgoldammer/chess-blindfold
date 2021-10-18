@@ -109,8 +109,8 @@ export class MoveEntry extends React.Component {
         <Row style={{ marginLeft: 10, marginRight: 10 }}>
           { moves.map(buttonForMove) }
         </Row> :
-				<div>
-					<Row>
+        <div>
+          <Row>
             <Col sm={{span:4, offset:4}}>
               <FormControl
                 ref="inputNode"
@@ -124,12 +124,12 @@ export class MoveEntry extends React.Component {
               <Button id="submitButton" onClick={ this.submit }>Submit</Button>
             </Col>
           </Row>
-					<Row>
-						<Col sm={{span:3, offset: 6}}>
-							<div style= {{ color: "red" }} > { this.state.warning } </div>
-						</Col>
-					</Row>
-				</div>
+          <Row>
+            <Col sm={{span:3, offset: 6}}>
+              <div style= {{ color: "red" }} > { this.state.warning } </div>
+            </Col>
+          </Row>
+        </div>
     return (<div>{ input }</div>)
   }
 }
@@ -249,6 +249,7 @@ export class SettingsWindow extends React.Component {
               clearable={ false }
               defaultValue={ values[0] }
               getValue={ this.props.skillLevel }
+              isSearchable={ false }
               onChange={ this.props.setSkill }
               options={ values }
             />
@@ -275,23 +276,23 @@ export class StatusWindow extends React.Component {
     const computerText = this.props.computerMove ? (<div><span>Computer played </span><Badge bg="secondary">{ this.props.computerMove }</Badge></div>): <span>Computer is waiting...</span>
     return (
       <div>
-					<Row>
-            <h1 className="text-center"><Badge variant={ this.props.status[2] }> { this.props.status[1] } </Badge></h1>
-					</Row>
-					<Row>
+          <Row>
+            <h1 className="text-center"><Badge bg={ this.props.status[2] }> { this.props.status[1] }</Badge></h1>
+          </Row>
+          <Row>
             <div className="text-center">
               <span className = {styles.statusStyle}>
                 { humanText }
               </span>
             </div>
-					</Row>
-					<Row>
+          </Row>
+          <Row>
             <div className="text-center">
               <span className = {styles.statusStyle}>
                 { computerText }
               </span>
             </div>
-					</Row>
+          </Row>
       </div>
     )
   }
@@ -379,7 +380,13 @@ export class App extends React.Component {
     console.log("Setting" + name + value);
     var newState = {}
     newState[name] = value
-    this.setState(newState);
+
+    var callback = () => {};
+    if (name == 'ownColorWhite') {
+      callback = this.makeComputerMove
+    };
+
+    this.setState(newState, callback);
   }
   settingsElement = () => <SettingsWindow 
     skillLevel={ this.state.skillLevel }
