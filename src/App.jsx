@@ -365,12 +365,16 @@ export class App extends React.Component {
       </Row>
     </div>
   )
-  boardElement = () => <Board fen={ this.state.gameClient.client.fen() }/>
+  boardElement = () => {
+    return (<div style={{display: 'flex', justifyContent: 'center'}}>
+      <Board fen={ this.state.gameClient.client.fen() }/>
+    </div>);
+  }
   handleChange = value => this.setState({ showType: value })
   moveTableElement = () => {
-    return (<div>
+    return (<div style={{display: 'flex', justifyContent: 'center'}}>
       <MoveTable pgn={ this.state.gameClient.client.pgn() }/>
-    </div>)
+    </div>);
   }
   setSkill = skill => {
     this.setState({ skillLevel: skill.value });
