@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styles from './App.css';
-import { Jumbotron, HelpBlock, Badge, Form, FormGroup, ControlBadge, ToggleButtonGroup, ToggleButton, ButtonGroup, Panel, ListGroup, ListGroupItem, Navbar, Nav, NavItem, NavDropdown, Button, DropdownButton, MenuItem, FormControl, Breadcrumb, Modal, Container, Row, Col } from 'react-bootstrap';
+import { Alert, Jumbotron, HelpBlock, Badge, Form, FormGroup, ControlBadge, ToggleButtonGroup, ToggleButton, ButtonGroup, Panel, ListGroup, ListGroupItem, Navbar, Nav, NavItem, NavDropdown, Button, DropdownButton, MenuItem, FormControl, Breadcrumb, Modal, Container, Row, Col } from 'react-bootstrap';
 import Select from 'react-select'
 
 import { AppNavbar } from './AppNavbar.jsx';
@@ -276,8 +276,17 @@ export class StatusWindow extends React.Component {
     const computerText = this.props.computerMove ? (<div><span>Computer played </span><Badge bg="secondary">{ this.props.computerMove }</Badge></div>): <span>Computer is waiting...</span>
     return (
       <div>
-          <Row>
-            <h1 className="text-center"><Badge bg={ this.props.status[2] }> { this.props.status[1] }</Badge></h1>
+        <Row style= {{ marginTop: 20}}>
+          <Col xs={7}>
+            <Alert style={{fontSize: '125%', height:50, paddingTop: 10}} className="text-center" variant={ this.props.status[2] }> { this.props.status[1] }</Alert>
+          </Col>
+          <Col xs={5}>
+            <div className="text-center">
+              { this.props.status == gameStatus.starting ? null :
+                  <Button style={{height:50}} className={styles.newGameButton} variant="primary" block id="resetButton" onClick={ this.props.reset }>New game</Button>
+              }
+            </div>
+          </Col>
           </Row>
           <Row>
             <div className="text-center">
@@ -347,7 +356,7 @@ export class App extends React.Component {
   getLastHumanMove = this.getLastMove(1, 2)
   makeMoveElement = () => (
     <div>
-      <StatusWindow status={ this.state.gameClient.getStatus() } humanMove = { this.getLastHumanMove() } computerMove = { this.getLastComputerMove() }/>
+      <StatusWindow reset={this.reset} status={ this.state.gameClient.getStatus() } humanMove = { this.getLastHumanMove() } computerMove = { this.getLastComputerMove() }/>
       <Row>
         <MoveEntry 
           enterMoveByKeyboard={ this.state.enterMoveByKeyboard } 
@@ -355,13 +364,6 @@ export class App extends React.Component {
           makeMove={ this.makeMove }
           parentState = { this.state }
         />
-      </Row>
-      <Row style= {{ marginTop: 20}}>
-        <div className="text-center">
-          { this.state.gameClient.getStatus() == gameStatus.starting ? null :
-              <Button className={styles.newGameButton} variant="warning" block id="resetButton" onClick={ this.reset }>Start new game</Button>
-          }
-        </div>
       </Row>
     </div>
   )
