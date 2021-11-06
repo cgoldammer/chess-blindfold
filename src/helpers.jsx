@@ -15,8 +15,8 @@ export const newClient = (fen=startingFen) => (Chess ? new Chess(fen) : new Ches
 export const startingFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 
 export const gameStatus = {
-  starting: [0, "New Game", "light"]
-, active: [1, "Active Game", "secondary"]
+  starting: [0, "Starting", "secondary"]
+, active: [1, "Playing", "secondary"]
 , whiteWon: [2, "White won", "danger"]
 , blackWon: [3, "Black won", "danger"]
 , draw: [4, "Draw", "warning"]

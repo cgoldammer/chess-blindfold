@@ -277,13 +277,13 @@ export class StatusWindow extends React.Component {
     return (
       <div>
         <Row style= {{ marginTop: 20}}>
-          <Col xs={7}>
+          <Col xs={6}>
             <Alert style={{fontSize: '125%', height:50, paddingTop: 10}} className="text-center" variant={ this.props.status[2] }> { this.props.status[1] }</Alert>
           </Col>
-          <Col xs={5}>
+          <Col xs={6}>
             <div className="text-center">
               { this.props.status == gameStatus.starting ? null :
-                  <Button style={{height:50}} className={styles.newGameButton} variant="primary" block id="resetButton" onClick={ this.props.reset }>New game</Button>
+                  <Button style={{height:50}} className={styles.newGameButton} variant="primary" block id="resetButton" onClick={ this.props.reset }>Start New</Button>
               }
             </div>
           </Col>
