@@ -98,7 +98,6 @@ export class MoveEntry extends React.Component {
   }
   render = () => {
         /* <div className={styles.moveButton} onClick={ () => this.props.makeMove(move) }>{ this.displayMove(move) }</div>*/
-    console.log(styles)
     const moves = this.props.gameClient.client.moves();
     const buttonForMove = move => (
       <Col key={ move } xs={3} md={2}>
@@ -247,8 +246,7 @@ export class SettingsWindow extends React.Component {
           <Col xs={6}>
             <Select
               clearable={ false }
-              defaultValue={ values[0] }
-              getValue={ this.props.skillLevel }
+              value={ {label: values[this.props.skillLevel].label }}
               isSearchable={ false }
               onChange={ this.props.setSkill }
               options={ values }
@@ -318,7 +316,6 @@ export class App extends React.Component {
   componentDidUpdate = (prevProps, prevState, snapshot) => {
     var table = document.getElementById("moveTable");
     if (table != null && "scrollHeight" in table){
-      console.log("scroll");
       table.scrollTop = table.scrollHeight;
     }
   }
@@ -383,7 +380,6 @@ export class App extends React.Component {
   }
   setOwnColor = isWhite => this.setState({ ownColorWhite: isWhite }, this.makeComputerMove)
   setProperty = (name, value) => {
-    console.log("Setting" + name + value);
     var newState = {}
     newState[name] = value
 
