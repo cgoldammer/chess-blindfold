@@ -32,7 +32,7 @@ let me know if you feel like the depth should be increased or settable in the ap
 export const getBest = (level, fen, callback) => {
   sf.postMessage('position fen ' + fen);
   sf.postMessage('setoption name Skill Level value ' + level)
-  sf.postMessage('go depth 2');
+  sf.postMessage('go depth 3');
   sf.onmessage = event => {
     if (event.data.startsWith('bestmove')){
       const move = event.data.split(" ")[1];
