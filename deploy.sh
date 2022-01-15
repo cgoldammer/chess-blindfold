@@ -7,8 +7,8 @@ echo "Starting deploy"
 npm run test
 npm run build
 
-CURRENTDIR=~/blindfold2
-SERVEDIR=~/serve_content/blindfold2
+CURRENTDIR=~/code/chess-blindfold
+SERVEDIR=~/serve_content/blindfold
 
 cd $CURRENTDIR
 rm -rf $SERVEDIR
