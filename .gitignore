@@ -6,3 +6,6 @@ data/template.json
 lib/bundle.js
 .travis*
 package-lock.json
+serve_content/prod
+serve_content/shared
+.idea

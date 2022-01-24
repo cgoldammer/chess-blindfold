@@ -7,6 +7,7 @@ set -e
 npm install
 
 # Downloading the stockfish binary. 
+mkdir -p serve_content/shared
 wget -O serve_content/shared/stockfish.js "https://github.com/exoticorn/stockfish-js/releases/download/sf_5_js/stockfish.js"
 
 # Running tests

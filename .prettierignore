@@ -1,0 +1,6 @@
+serve_content
+node_modules
+package.json
+webpack.*.js
+*.yml
+*.md
