@@ -9,7 +9,7 @@
 .question {
   font-size: 120%;
   height: 100px;
-  minHeight: 100px;
+  minheight: 100px;
 }
 
 .statusStyle {
@@ -19,24 +19,24 @@
 }
 
 .center {
-	margin-left: auto;
-	margin-right: auto;
-	position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
 }
- 
+
 .btnGroup {
   display: flex;
 }
 
 .btnFlex {
   flex: 1;
-	height: 200px;
+  height: 200px;
 }
 
 .moveButton {
   font-size: 125%;
   background: transparent;
-  border: 2px solid #0099CC;
+  border: 2px solid #0099cc;
   border-radius: 5px;
   margin-top: 5px;
   cursor: pointer;
