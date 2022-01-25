@@ -1,5 +1,5 @@
 import React from "react";
-import { Nav, Navbar, NavDropdown, Modal, MenuItem } from "react-bootstrap";
+import { Nav, Navbar, Modal } from "react-bootstrap";
 
 export const appName = "Blindfold chess";
 
@@ -41,6 +41,7 @@ export class AppNavbar extends React.Component {
               <a
                 target="_blank"
                 href="https://github.com/cgoldammer/chess-blindfold"
+                rel="noreferrer"
               >
                 open-source
               </a>{" "}
@@ -52,7 +53,11 @@ export class AppNavbar extends React.Component {
             </p>
             <p>
               Check out{" "}
-              <a target="_blank" href="https://www.chrisgoldammer.com">
+              <a
+                target="_blank"
+                href="https://www.chrisgoldammer.com"
+                rel="noreferrer"
+              >
                 my homepage
               </a>
               !

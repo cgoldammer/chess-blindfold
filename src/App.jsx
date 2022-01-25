@@ -1,30 +1,13 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import PropTypes from "prop-types";
 import styles from "./App.css";
 import {
   Alert,
-  Jumbotron,
-  HelpBlock,
   Badge,
-  Form,
-  FormGroup,
-  ControlBadge,
-  ToggleButtonGroup,
   ToggleButton,
   ButtonGroup,
-  Panel,
-  ListGroup,
-  ListGroupItem,
-  Navbar,
-  Nav,
-  NavItem,
-  NavDropdown,
   Button,
-  DropdownButton,
-  MenuItem,
   FormControl,
-  Breadcrumb,
-  Modal,
   Container,
   Row,
   Col,
@@ -35,34 +18,8 @@ import { AppNavbar } from "./AppNavbar.jsx";
 import { List } from "immutable";
 import { Board, MoveTable } from "./ChessApp.jsx";
 
-import { GameClient, startingFen, gameStatus } from "./helpers.jsx";
+import { GameClient, gameStatus } from "./helpers.jsx";
 import { getBest } from "./engine.js";
-
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    // You can also log the error to an error reporting service
-    logErrorToMyService(error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      // You can render any custom fallback UI
-      return <h1>Something went wrong.</h1>;
-    }
-
-    return this.props.children;
-  }
-}
 
 /* The window to enter moves. There are currently two options:
 (1) Click on buttons, one for each move
@@ -77,7 +34,7 @@ export class MoveEntry extends React.Component {
     this.state = { value: "", warning: null };
   }
   focus = () => {
-    let node = ReactDOM.findDOMNode(this.refs.inputNode);
+    let node = this.inputNode;
     if (node && node.focus instanceof Function) {
       node.focus();
     }
@@ -102,6 +59,7 @@ export class MoveEntry extends React.Component {
       this.showWarning("Move is not valid");
     }
   };
+  // eslint-disable-next-line no-unused-vars
   componentDidUpdate = (prevProps, prevState, snapshot) => {
     this.focus();
   };
@@ -123,7 +81,6 @@ export class MoveEntry extends React.Component {
     return formattedMove;
   };
   render = () => {
-    /* <div className={styles.moveButton} onClick={ () => this.props.makeMove(move) }>{ this.displayMove(move) }</div>*/
     const moves = this.props.gameClient.client.moves();
     const buttonForMove = (move) => (
       <Col key={move} xs={3} md={2}>
@@ -144,7 +101,7 @@ export class MoveEntry extends React.Component {
         <Row>
           <Col sm={{ span: 4, offset: 4 }}>
             <FormControl
-              ref="inputNode"
+              ref={(ref) => (this.inputNode = ref)}
               type="text"
               onChange={this.onChange}
               onKeyPress={this.handleKeyPress}
@@ -167,6 +124,13 @@ export class MoveEntry extends React.Component {
     return <div>{input}</div>;
   };
 }
+
+MoveEntry.propTypes = {
+  enterMoveByKeyboard: PropTypes.func,
+  makeMove: PropTypes.func,
+  gameClient: PropTypes.any,
+  parentState: PropTypes.object,
+};
 
 const resetState = () => {
   const gameClient = new GameClient();
@@ -321,6 +285,13 @@ export class SettingsWindow extends React.Component {
   };
 }
 
+SettingsWindow.propTypes = {
+  setSkill: PropTypes.func,
+  skillLevel: PropTypes.number,
+  parentState: PropTypes.object,
+  setProperty: PropTypes.func,
+};
+
 /* The statuswindow provides the status of the games and the last moves
 by the player and the computer */
 export class StatusWindow extends React.Component {
@@ -389,6 +360,15 @@ export class StatusWindow extends React.Component {
   };
 }
 
+StatusWindow.propTypes = {
+  reset: PropTypes.any,
+  status: PropTypes.list,
+  computerMove: PropTypes.string,
+  humanMove: PropTypes.string,
+  setSkill: PropTypes.any,
+  skillLevel: PropTypes.number,
+};
+
 /* The main app, which pulls in all the other windows. */
 export class App extends React.Component {
   constructor(props) {
@@ -396,6 +376,7 @@ export class App extends React.Component {
     this.state = startingState();
   }
   reset = () => this.setState(resetState(), this.makeComputerMove);
+  // eslint-disable-next-line no-unused-vars
   componentDidUpdate = (prevProps, prevState, snapshot) => {
     var table = document.getElementById("moveTable");
     if (table != null && "scrollHeight" in table) {
@@ -552,4 +533,8 @@ export class App extends React.Component {
 
 App.defaultProps = {
   showInput: false,
+};
+
+App.propTypes = {
+  autoMove: PropTypes.bool,
 };

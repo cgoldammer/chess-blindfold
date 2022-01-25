@@ -1,16 +1,12 @@
-/* A hack for a weird problem: The import is handled differently
-when running in webpack-dev-server and through jest. 
-Just importing twice, and using the one version that works */
-import { Chess } from "chess.js";
-import Chess2 from "chess.js";
-
-/* 
+/*
 Loading stockfish. This will require web workers to function correctly.
 */
+
+var sf;
 try {
-  var sf = new Worker("./shared/stockfish.js");
+  sf = new Worker("./shared/stockfish.js");
 } catch (err) {
-  var sf = {};
+  sf = {};
 }
 
 /* 
@@ -18,6 +14,8 @@ A worker requires `onmessage`, otherwise I'd get an error.
 This is re-set to something usable when we are posting values to
 stockfish
 */
+
+/* eslint-disable no-unused-vars */
 sf.onmessage = function (event) {};
 
 /* 

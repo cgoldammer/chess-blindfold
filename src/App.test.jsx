@@ -1,21 +1,16 @@
-import React, { Component } from "react";
-import { Button } from "react-bootstrap";
+import React from "react";
 import { List } from "immutable";
 
 jest.mock("./Context");
 jest.mock("./engine");
 
 import { App, MoveEntry } from "./App.jsx";
-import { appName } from "./AppNavbar.jsx";
-import { newClient } from "./helpers.jsx";
 import { getBest } from "./engine.js";
 
 import { configure } from "enzyme";
 import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
 configure({ adapter: new Adapter() });
-import { shallow, mount, render } from "enzyme";
-
-import { dummy } from "./Context.js";
+import { mount } from "enzyme";
 
 import { startingFen } from "./helpers.jsx";
 
@@ -31,7 +26,6 @@ const getPositionClient = () => {
 describe("In the game client", () => {
   test("Checking for a valid move does not change the state", () => {
     const client = new GameClient();
-    const move = "e4";
     expect(client.isMoveValid("e4")).toEqual(true);
     expect(client.client.fen()).toEqual(startingFen);
   });

@@ -8,7 +8,8 @@
     "build": "webpack --config webpack.prod.js",
     "test": "jest",
     "prepare": "husky install",
-    "prettier": "prettier ."
+    "prettier": "prettier --write .",
+    "eslint": "eslint . --ext .js --ext .jsx"
   },
   "jest": {
     "moduleNameMapper": {
@@ -59,6 +60,11 @@
     "webpack": "^5.58.2",
     "webpack-cli": "4.9.0",
     "webpack-merge": "^5.8.0",
-    "webworker": "^0.8.4"
+    "webworker": "^0.8.4",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "eslint": "^8.7.0",
+    "prop-types": "^15.8.1"
   }
 }

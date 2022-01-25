@@ -1,12 +1,8 @@
-import { List } from "immutable";
-
 /* A hack for a weird problem: The import is handled differently
 when running in webpack-dev-server and through jest. 
 Just importing twice, and using the one version that works */
 import { Chess } from "chess.js";
 import Chess2 from "chess.js";
-
-import { getBest } from "./engine.js";
 
 // Using either `Chess` or `Chess2` - see the reason for this hack above
 export const newClient = (fen = startingFen) =>
@@ -47,7 +43,7 @@ export class GameClient {
 }
 
 export const defaultGetRows = (movetext, newlineChar) => {
-  // eslint-diable-line no-unused-vars
+  // eslint-disable-line no-unused-vars
   newlineChar;
   let ms = movetext;
   if (!ms) {
@@ -57,6 +53,7 @@ export const defaultGetRows = (movetext, newlineChar) => {
   ms = ms.replace(/(\{[^}]+\})+?/g, "");
 
   /* delete recursive annotation variations */
+  /* eslint-disable no-useless-escape */
   const ravRegex = /(\([^\(\)]+\))+?/g;
   while (ravRegex.test(ms)) {
     ms = ms.replace(ravRegex, "");
@@ -74,6 +71,7 @@ export const defaultGetRows = (movetext, newlineChar) => {
   /* Split into rows */
   const rows = [];
   const rowRegex = /\d+\.\s?\S+(?:\s+\S+)?/g;
+  /* eslint-disable no-constant-condition */
   while (true) {
     const result = rowRegex.exec(ms);
     if (!result) {
@@ -85,6 +83,3 @@ export const defaultGetRows = (movetext, newlineChar) => {
   }
   return rows;
 };
-
-export const calculateMoveNumber = (number, isBlack) =>
-  1 + ((number - 1) * 2 + isBlack);

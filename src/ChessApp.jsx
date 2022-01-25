@@ -1,35 +1,13 @@
 import React from "react";
 import { useTable } from "react-table";
-import styles from "./ChessApp.css";
+import PropTypes from "prop-types";
 import styled from "styled-components";
-import {
-  ToggleButtonGroup,
-  ToggleButton,
-  ButtonGroup,
-  Panel,
-  ListGroup,
-  ListGroupItem,
-  Navbar,
-  Nav,
-  NavItem,
-  NavDropdown,
-  Grid,
-  Row,
-  Col,
-  Button,
-  DropdownButton,
-  MenuItem,
-  FormControl,
-  Breadcrumb,
-  Modal,
-} from "react-bootstrap";
+import { Row } from "react-bootstrap";
 import Chessdiagram from "react-chessdiagram";
-import { defaultGetRows, calculateMoveNumber } from "./helpers.jsx";
+import { defaultGetRows } from "./helpers.jsx";
 
 const lightSquareColor = "#f2f2f2";
 const darkSquareColor = "#bfbfbf";
-const currentPosition =
-  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; // starting position
 const flip = false;
 
 const width = window.innerWidth;
@@ -106,19 +84,23 @@ function Table({ columns, data }) {
     <table {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup) => (
+          // eslint-disable-next-line react/jsx-key
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
+              // eslint-disable-next-line react/jsx-key
               <th {...column.getHeaderProps()}>{column.render("Header")}</th>
             ))}
           </tr>
         ))}
       </thead>
       <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
+        {rows.map((row) => {
           prepareRow(row);
           return (
+            // eslint-disable-next-line react/jsx-key
             <tr {...row.getRowProps()}>
               {row.cells.map((cell) => {
+                // eslint-disable-next-line react/jsx-key
                 return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
               })}
             </tr>
@@ -129,13 +111,18 @@ function Table({ columns, data }) {
   );
 }
 
+Table.propTypes = {
+  data: PropTypes.any,
+  columns: PropTypes.any,
+};
+
 export class Board extends React.Component {
   constructor(props) {
     super(props);
   }
   render = () => (
     <Chessdiagram
-      lip={flip}
+      flip={flip}
       fen={this.props.fen}
       squareSize={squareSize}
       lightSquareColor={lightSquareColor}
@@ -144,12 +131,16 @@ export class Board extends React.Component {
   );
 }
 
+Board.propTypes = {
+  fen: PropTypes.string,
+};
+
 export class MoveTable extends React.Component {
   constructor(props) {
     super(props);
   }
   getMoves = () => defaultGetRows(this.props.pgn);
-  rowMapper = (row, index) => ({
+  rowMapper = (row) => ({
     moveNumber: row[0],
     white: row[1],
     black: row[2],
@@ -168,3 +159,7 @@ export class MoveTable extends React.Component {
     );
   };
 }
+
+MoveTable.propTypes = {
+  pgn: PropTypes.string,
+};
