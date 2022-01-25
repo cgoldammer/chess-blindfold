@@ -1,20 +1,24 @@
 #!/bin/bash
 set -e
 
+# Note: If you're not the creator of this library
+# you likely shouldn't use or run this, because
+# you'll need the right server configured.
+
 echo "Starting deploy"
 
 # Building the library
 npm run test
 npm run build
 
-CURRENTDIR=~/code/chess-blindfold
-SERVEDIR=~/serve_content/blindfold
+SERVEDIR=serve_content/chess-blindfold
 
-cd $CURRENTDIR
-rm -rf $SERVEDIR
-mkdir $SERVEDIR
-cp -r $CURRENTDIR/serve_content/prod $SERVEDIR
-cp -r $CURRENTDIR/serve_content/shared $SERVEDIR
-cp -r $CURRENTDIR/serve_content/index_prod.html $SERVEDIR/index.html
+
+
+ssh dev "mv ${SERVEDIR} ${SERVEDIR}_backup"
+ssh dev "mkdir ${SERVEDIR}"
+rsync -r serve_content/prod dev:$SERVEDIR
+rsync -r serve_content/shared dev:$SERVEDIR
+rsync serve_content/index_prod.html dev:$SERVEDIR/index.html
 
 echo "Completed deploy"
