@@ -8,6 +8,8 @@ set -e
 echo "Starting deploy"
 
 # Building the library
+npm run prettier
+npm run eslint
 npm run test
 npm run build
 
