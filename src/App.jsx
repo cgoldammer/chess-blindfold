@@ -126,7 +126,7 @@ export class MoveEntry extends React.Component {
 }
 
 MoveEntry.propTypes = {
-  enterMoveByKeyboard: PropTypes.func,
+  enterMoveByKeyboard: PropTypes.bool,
   makeMove: PropTypes.func,
   gameClient: PropTypes.any,
   parentState: PropTypes.object,
@@ -335,7 +335,6 @@ export class StatusWindow extends React.Component {
                   style={{ height: 50 }}
                   className={styles.newGameButton}
                   variant="primary"
-                  block
                   id="resetButton"
                   onClick={this.props.reset}
                 >
@@ -361,8 +360,8 @@ export class StatusWindow extends React.Component {
 }
 
 StatusWindow.propTypes = {
-  reset: PropTypes.any,
-  status: PropTypes.list,
+  reset: PropTypes.func,
+  status: PropTypes.any,
   computerMove: PropTypes.string,
   humanMove: PropTypes.string,
   setSkill: PropTypes.any,
