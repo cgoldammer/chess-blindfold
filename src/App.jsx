@@ -51,6 +51,16 @@ export class MoveEntry extends React.Component {
   };
   submit = () => this.makeMove(this.state.value);
   makeMove = (move) => {
+    const capitalizeAnywayArray = ['k', 'q', 'n', 'r']
+    if (capitalizeAnywayArray.includes(move.charAt(0))){
+      move = move.charAt(0).toUpperCase() + move.slice(1)
+    }
+    if (move.charAt(0) == 'b'){
+      const tmpMoveValid = this.props.gameClient.isMoveValid(move)
+      if(!tmpMoveValid){
+        move = move.charAt(0).toUpperCase() + move.slice(1)
+      }
+    }
     const moveValid = this.props.gameClient.isMoveValid(move);
     if (moveValid) {
       this.props.makeMove(move);
