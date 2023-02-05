@@ -342,8 +342,11 @@ export class StatusWindow extends React.Component {
         <span>Computer played </span>
         <Badge bg="secondary">{this.props.computerMove}</Badge>
       </div>
-    ) : (
-      <span>Computer is waiting...</span>
+    ) : ( this.props.humanMove ? (
+            <span>Computer is thinking...</span>
+        ) : (
+            <span>Computer is waiting...</span>
+        )
     );
     return (
       <div>
@@ -461,7 +464,7 @@ export class App extends React.Component {
         reset={this.reset}
         status={this.state.gameClient.getStatus()}
         humanMove={this.getLastHumanMove()}
-        computerMove={this.getLastComputerMove()}
+        computerMove={ this.isPlayersMove() ? this.getLastComputerMove() : undefined }
       />
       <Row>
         <MoveEntry
