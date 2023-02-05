@@ -124,14 +124,14 @@ describe("after I make a move", () => {
 describe("Testing the dummy engine", () => {
   test("get best returns a move in the starting position", () => {
     const mockCallback = jest.fn();
-    getBest(0, startingFen, mockCallback);
+    getBest(3, 0, startingFen, mockCallback);
     expect(mockCallback.mock.calls[0][0]).toBeTruthy;
   });
 
   test("get best returns no move if mated", () => {
     const mockCallback = jest.fn();
     const matedFen = "rrk5/8/K7/8/8/8/8/8 w - -";
-    getBest(0, matedFen, mockCallback);
+    getBest(3, 0, matedFen, mockCallback);
     expect(mockCallback.mock.calls[0][0]).not.toBeTruthy;
   });
 });
