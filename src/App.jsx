@@ -152,6 +152,7 @@ here.
 var startingState = () => {
   var state = resetState();
   state["ownColorWhite"] = true;
+  state["depth"] = 3;
   state["skillLevel"] = 0;
   state["showIfMate"] = false;
   state["showIfTakes"] = true;
@@ -162,7 +163,7 @@ var startingState = () => {
 
 /* Get the stockfish levels in terms of Elo rating.
 Stockfish levels range from 0 (1100 Elo) to 20 (3100 Elo)
-These are really very rough heuristics, but should be close enough for 
+These are really very rough heuristics, but should be close enough for
 our purposes.
 */
 const getStockfishLevels = () => {
@@ -178,12 +179,24 @@ const getStockfishLevels = () => {
   return values;
 };
 
+const getStockfishDepthValues = () => {
+  var values = [];
+  const numDepths = 30;
+  const minDepth = 3;
+  for (var i = 0; i <= numDepths; i++) {
+    const depth = minDepth + i;
+    values.push({ value: depth, label: depth });
+  }
+  return values;
+};
+
 /* Displays the window to change settings */
 export class SettingsWindow extends React.Component {
   constructor(props) {
     super(props);
   }
   render = () => {
+    const depthValues = getStockfishDepthValues();
     const values = getStockfishLevels();
 
     const valsButtons = [
@@ -259,6 +272,21 @@ export class SettingsWindow extends React.Component {
       <div>
         <Row>
           <Col xs={6}>
+            <div> Stockfish depth: </div>
+          </Col>
+          <Col xs={6}>
+            <Select
+              clearable={false}
+              value={{ label: this.props.depth }}
+              isSearchable={false}
+              onChange={this.props.setDepth}
+              options={depthValues}
+            />
+          </Col>
+        </Row>
+        {hr}
+        <Row>
+          <Col xs={6}>
             <div> Stockfish strength (Elo): </div>
           </Col>
           <Col xs={6}>
@@ -286,6 +314,8 @@ export class SettingsWindow extends React.Component {
 }
 
 SettingsWindow.propTypes = {
+  setDepth: PropTypes.func,
+  depth: PropTypes.number,
   setSkill: PropTypes.func,
   skillLevel: PropTypes.number,
   parentState: PropTypes.object,
@@ -364,6 +394,8 @@ StatusWindow.propTypes = {
   status: PropTypes.any,
   computerMove: PropTypes.string,
   humanMove: PropTypes.string,
+  setDepth: PropTypes.any,
+  depth: PropTypes.number,
   setSkill: PropTypes.any,
   skillLevel: PropTypes.number,
 };
@@ -402,7 +434,7 @@ export class App extends React.Component {
       return;
     }
     const fen = this.state.gameClient.client.fen();
-    getBest(this.state.skillLevel, fen, this.makeMove);
+    getBest(this.state.depth, this.state.skillLevel, fen, this.makeMove);
   };
   shownElement = () => {
     switch (this.state.showType) {
@@ -456,6 +488,9 @@ export class App extends React.Component {
       </div>
     );
   };
+  setDepth = (depth) => {
+      this.setState({ depth: depth.value });
+  };
   setSkill = (skill) => {
     this.setState({ skillLevel: skill.value });
   };
@@ -474,6 +509,8 @@ export class App extends React.Component {
   };
   settingsElement = () => (
     <SettingsWindow
+      depth={this.state.depth}
+      setDepth={this.setDepth}
       skillLevel={this.state.skillLevel}
       setSkill={this.setSkill}
       ownColorWhite={this.state.ownColorWhite}
