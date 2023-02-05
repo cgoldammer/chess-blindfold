@@ -489,7 +489,7 @@ export class App extends React.Component {
     );
   };
   setDepth = (depth) => {
-      this.setState({ depth: depth.value });
+    this.setState({ depth: depth.value });
   };
   setSkill = (skill) => {
     this.setState({ skillLevel: skill.value });

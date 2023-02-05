@@ -29,7 +29,7 @@ export const getBest = (depth, level, fen, callback) => {
   sf.postMessage("position fen " + fen);
   sf.postMessage("setoption name Skill Level value " + level);
   sf.postMessage("go depth " + depth);
-    sf.onmessage = (event) => {
+  sf.onmessage = (event) => {
     if (event.data.startsWith("bestmove")) {
       const move = event.data.split(" ")[1];
       return callback(move);
