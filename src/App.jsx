@@ -81,7 +81,7 @@ export class MoveEntry extends React.Component {
     return formattedMove;
   };
   render = () => {
-    const moves = this.props.gameClient.client.moves();
+    const moves = this.props.gameClient.client.moves().sort();
     const buttonForMove = (move) => (
       <Col key={move} xs={3} md={2}>
         <div
