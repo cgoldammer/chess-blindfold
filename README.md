@@ -5,7 +5,7 @@ This is an app to train you in playing blindfold. Think of it as stockfish witho
 
 The app is optimized for mobile play and aims to be as simple as possible. You should just be able to click to play.
 
-As of February 2023, my logging tells me that there's 2K distinct users a month, with 100% growth over the last year, and a marketing budget of $0. Thanks to all of you, I'm simply happy that you're using this!
+As of February 2023, my logging tells me that there's 2.6K distinct users a month, with 200% growth over the last year, and a marketing budget of $0. Thanks to all of you, I'm simply happy that you're using this!
 
 ## Warning: Not in active development!
 
