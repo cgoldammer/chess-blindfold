@@ -1,3 +1,9 @@
+# Warning:
+
+My logging tells me that there's many users (thank you!) but this app is not in active development. I generally like working on it, but can't promise that I'll respond. I do appreciate PRs (preferably with tests) and try to review them, but sometimes it just takes time. I can promise that I read every email and feedback request I get and am very happy to hear from you! 
+
+If you do want to become a maintainer of this project and direct the experience of the >2K users a month (as of Feb 22), let me know!
+
 # Blindfold chess
 
 This is an app to train you in playing blindfold. Think of it as stockfish without the board. You see all possible moves and click on a move to make it.
@@ -18,10 +24,6 @@ Note: I'm not actively developing this library, but always happy for others to s
 - Show board with only pawn structure
 - Ask questions about position (e.g. what are the fields for the white pawns?)
 - Store results so you can find out whether you are improving
-
-# Help
-
-I'm always greateful for collaborators!
 
 # Compiling the code
 
