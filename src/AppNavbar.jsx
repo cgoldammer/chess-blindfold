@@ -32,6 +32,7 @@ export class AppNavbar extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <p>A minimalist tool to play blindfold chess.</p>
+            <p>Update March 2023: Moves are finally sorted! Let me know if this is a problem.</p>
             <p>Update from Oct 2021: Updated the design - feedback welcome!</p>
             <p>
               Click on a move to make it, that is really all there is to it!

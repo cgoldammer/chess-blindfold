@@ -83,3 +83,21 @@ export const defaultGetRows = (movetext, newlineChar) => {
   }
   return rows;
 };
+
+/*
+Sort order for moves:
+1. Pawn moves (alphabetically ordered)
+2. Castling
+3. Piece moves (alphabetically ordered)
+ */
+export const moveSortCompareFunction = (a, b) => {
+  const aIsLower = a[0] === a[0].toLowerCase();
+  const bIsLower = b[0] === b[0].toLowerCase();
+
+  const compareWithCastles = (a,b) => {
+    const aIsCastle = a[0] === "O"
+    const bIsCastle = b[0] === "O"
+    return aIsCastle != bIsCastle ? bIsCastle - aIsCastle : a > b ? 1 : -1
+  }
+  return aIsLower != bIsLower ? bIsLower - aIsLower : compareWithCastles(a, b)
+}

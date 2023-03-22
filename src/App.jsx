@@ -18,7 +18,7 @@ import { AppNavbar } from "./AppNavbar.jsx";
 import { List } from "immutable";
 import { Board, MoveTable } from "./ChessApp.jsx";
 
-import { GameClient, gameStatus } from "./helpers.jsx";
+import {GameClient, gameStatus, moveSortCompareFunction} from "./helpers.jsx";
 import { getBest } from "./engine.js";
 
 /* The window to enter moves. There are currently two options:
@@ -81,7 +81,7 @@ export class MoveEntry extends React.Component {
     return formattedMove;
   };
   render = () => {
-    const moves = this.props.gameClient.client.moves();
+    const moves = this.props.gameClient.client.moves().sort(moveSortCompareFunction);
     const buttonForMove = (move) => (
       <Col key={move} xs={3} md={2}>
         <div

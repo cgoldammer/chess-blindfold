@@ -12,7 +12,7 @@ import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
 configure({ adapter: new Adapter() });
 import { mount } from "enzyme";
 
-import { startingFen } from "./helpers.jsx";
+import {moveSortCompareFunction, startingFen} from "./helpers.jsx";
 
 import { GameClient } from "./helpers.jsx";
 
@@ -135,3 +135,23 @@ describe("Testing the dummy engine", () => {
     expect(mockCallback.mock.calls[0][0]).not.toBeTruthy;
   });
 });
+
+describe("Helper functions work", () => {
+  test("The sorting does nothing if sorted", () => {
+    const movesUnsorted = ["a1", "A1"]
+    const movesSorted = ["a1", "A1"]
+    expect(movesUnsorted.sort(moveSortCompareFunction)).toEqual(movesSorted)
+  });
+
+  test("The sorting orders if unsorted", () => {
+    const movesUnsorted = ["A2", "A1", "a2", "a1"]
+    const movesSorted = ["a1", "a2", "A1", "A2"]
+    expect(movesUnsorted.sort(moveSortCompareFunction)).toEqual(movesSorted)
+  });
+
+  test("Castling is done right (after pawn moves)", () => {
+    const movesUnsorted = ["O-O", "A2", "a1"]
+    const movesSorted = ["a1", "O-O", "A2"]
+    expect(movesUnsorted.sort(moveSortCompareFunction)).toEqual(movesSorted)
+  })
+})
