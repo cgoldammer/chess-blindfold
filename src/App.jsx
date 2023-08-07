@@ -20,6 +20,7 @@ import { Board, MoveTable } from "./ChessApp.jsx";
 
 import {GameClient, gameStatus, moveSortCompareFunction} from "./helpers.jsx";
 import { getBest } from "./engine.js";
+import { defaultPieces } from "./pieces.jsx";
 
 /* The window to enter moves. There are currently two options:
 (1) Click on buttons, one for each move
@@ -28,11 +29,15 @@ import { getBest } from "./engine.js";
 Through trial and error I noticed that the first option simply works better, especially
 when using a phone.
 */
+
+const pawns = ["a", "b", "c", "d", "e", "f", "g", "h"];
 export class MoveEntry extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { value: "", warning: null };
+    this.state = { value: "", warning: null, pieceFilter: null };
   }
+
+  
   focus = () => {
     let node = this.inputNode;
     if (node && node.focus instanceof Function) {
@@ -59,6 +64,15 @@ export class MoveEntry extends React.Component {
       this.showWarning("Move is not valid");
     }
   };
+
+  setPieceFilter = (pieceFilter) => {
+    if (this.state.pieceFilter === pieceFilter) {
+      pieceFilter = null;
+    }
+
+    this.setState({ pieceFilter: pieceFilter });
+  };
+
   // eslint-disable-next-line no-unused-vars
   componentDidUpdate = (prevProps, prevState, snapshot) => {
     this.focus();
@@ -82,20 +96,59 @@ export class MoveEntry extends React.Component {
   };
   render = () => {
     const moves = this.props.gameClient.client.moves().sort(moveSortCompareFunction);
+    const filteredMoves = moves.filter((move) => {
+      if (this.state.pieceFilter === null) {
+        return true;
+      }
+      const firstLetter = move[0];
+      if (pawns.includes(firstLetter) && this.state.pieceFilter === "P") {
+        return true;
+      } else if (firstLetter === this.state.pieceFilter) {
+        return true;
+      }
+      return false;
+    });
+
+    console.log("filteredMoves", filteredMoves);
+          
+
+    const hintPieces = [];
+    Object.keys(moves).forEach((move) => {
+      const firstLetter = moves[move][0];
+      const filter = pawns.includes(firstLetter) ? "P" : firstLetter;
+      if (!hintPieces.includes(filter)) {
+        hintPieces.push(filter);
+      };
+    });
     const buttonForMove = (move) => (
       <Col key={move} xs={3} md={2}>
         <div
           className={styles.moveButton}
-          onClick={() => this.props.makeMove(move)}
+          onClick={() => { this.setPieceFilter(null); this.props.makeMove(move)}}
         >
           {this.displayMove(move)}
         </div>
       </Col>
     );
+    const buttonForHint = (piece) => (
+      <Col key={piece} xs={3} md={2}>
+        <div
+          onClick={() => this.setPieceFilter(piece)}
+        >
+          {defaultPieces[`${this.props.isWhite ? 'w' : 'b'}${piece}`]}
+        </div>
+      </Col>
+    );
+
     const input = !this.props.enterMoveByKeyboard ? (
-      <Row style={{ marginLeft: 10, marginRight: 10 }}>
-        {moves.map(buttonForMove)}
+      <div>
+      <Row style={{ margin: 10 }}>
+        {hintPieces.map(buttonForHint)}
       </Row>
+      <Row style={{ margin: 10 }}>
+        {filteredMoves.map(buttonForMove)}
+      </Row>
+      </div>
     ) : (
       <div>
         <Row>
@@ -395,6 +448,7 @@ export class App extends React.Component {
     };
     this.setState(newState, nextMoveCallback);
   };
+
   isPlayersMove = () => this.state.ownColorWhite == this.state.colorToMoveWhite;
   makeComputerMove = () => {
     // Only make a computer move if it's not the player's turn
@@ -436,7 +490,9 @@ export class App extends React.Component {
           enterMoveByKeyboard={this.state.enterMoveByKeyboard}
           gameClient={this.state.gameClient}
           makeMove={this.makeMove}
+          pieceFilter={this.setPieceFilter}
           parentState={this.state}
+          isWhite={this.state.ownColorWhite}
         />
       </Row>
     </div>
