@@ -109,9 +109,6 @@ export class MoveEntry extends React.Component {
       return false;
     });
 
-    console.log("filteredMoves", filteredMoves);
-          
-
     const hintPieces = [];
     Object.keys(moves).forEach((move) => {
       const firstLetter = moves[move][0];
@@ -133,6 +130,8 @@ export class MoveEntry extends React.Component {
     const buttonForHint = (piece) => (
       <Col key={piece} xs={3} md={2}>
         <div
+          className={styles.moveButton}
+          style={{background: this.state.pieceFilter === piece ? "#0d6efd" : "white"}}
           onClick={() => this.setPieceFilter(piece)}
         >
           {defaultPieces[`${this.props.isWhite ? 'w' : 'b'}${piece}`]}
