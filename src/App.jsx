@@ -141,8 +141,8 @@ export class MoveEntry extends React.Component {
 
     const input = !this.props.enterMoveByKeyboard ? (
       <div>
-      <Row style={{ margin: 10 }}>
-        {hintPieces.map(buttonForHint)}
+       <Row style={{ margin: 10 }}>
+        {this.props.parentState.showFilters ? (hintPieces.map(buttonForHint) ) : null}
       </Row>
       <Row style={{ margin: 10 }}>
         {filteredMoves.map(buttonForMove)}
@@ -209,6 +209,7 @@ var startingState = () => {
   state["showIfTakes"] = true;
   state["showIfCheck"] = true;
   state["enterMoveByKeyboard"] = false;
+  state["showFilters"] = true;
   return state;
 };
 
@@ -302,6 +303,12 @@ export class SettingsWindow extends React.Component {
         {buttonForProperty(
           "showIfTakes",
           "Show is move is taking piece",
+          valsButtons
+        )}
+        {hr}
+        {buttonForProperty(
+          "showFilters",
+          "Show pieces' filters",
           valsButtons
         )}
       </div>

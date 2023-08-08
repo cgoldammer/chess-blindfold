@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 // https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces
 // By en:User:Cburnett - Own work
 // This W3C - unspecified vector image was created with Inkscape., CC BY - SA 3.0, https://commons.wikimedia.org/w/index.php?curid=1499810
